@@ -1,27 +1,28 @@
-import { getUser, setUserMetadata } from '~/controllers/users/service';
+import dotenv from 'dotenv';
+import { getUser } from '~/controllers/users/service';
+import { axiosRequestWithRetries, getManagementApiToken } from '~/utils';
 
-export const resetUserTodos = (userId: string) =>
-  setUserMetadata(userId, {
-    todos: {
-      dailies: [],
-      weeklies: [],
-      monthlies: [],
-      singles: [],
-    },
-  });
+dotenv.config();
+
+const issuer = process.env.ISSUER_BASE_URL;
 
 export const getTodos = async (userId: string): Promise<any> => {
   const user = await getUser(userId);
-  const userMetadata = user.user_metadata;
-
-  return (await isTodosSchemeValid(userMetadata)) ? userMetadata.todos : null;
+  return user.user_metadata.todos;
 };
 
-export const isTodosSchemeValid = async (metadata: any) => {
-  if (!metadata?.todos) return false;
-  if (!metadata?.todos?.dailies) return false;
-  if (!metadata?.todos?.weeklies) return false;
-  if (!metadata?.todos?.monthlies) return false;
-  if (!metadata?.todos?.singles) return false;
-  return true;
+export const setTodos = async (userId: string, todos: []) => {
+  const configCallback = () => ({
+    method: 'PATCH',
+    url: `${issuer}/api/v2/users/${userId}`,
+    headers: {
+      authorization: getManagementApiToken().token,
+      'content-type': 'application/json',
+    },
+    data: {
+      user_metadata: { todos },
+    },
+  });
+
+  await axiosRequestWithRetries(configCallback);
 };

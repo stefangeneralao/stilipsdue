@@ -1,0 +1,67 @@
+{
+  "todos": [
+    {
+      "id": "d1",
+      "label": "Diska",
+      "status": "done",
+      "swimlane": "dailies",
+      "index": 0
+    },
+    {
+      "id": "d2",
+      "label": "Stretcha",
+      "status": "inProgress",
+      "swimlane": "dailies",
+      "index": 0
+    },
+    {
+      "id": "d3",
+      "label": "Drick två liter vatten",
+      "status": "inProgress",
+      "swimlane": "dailies",
+      "index": 1
+    },
+    {
+      "id": "d4",
+      "label": "Ät vitaminer",
+      "status": "todo",
+      "swimlane": "dailies",
+      "index": 2
+    },
+    {
+      "id": "w1",
+      "label": "Handla",
+      "status": "done",
+      "swimlane": "weeklies",
+      "index": 0
+    },
+    {
+      "id": "w2",
+      "label": "Pissa på valfri kyrka",
+      "status": "done",
+      "swimlane": "weeklies",
+      "index": 1
+    },
+    {
+      "id": "m1",
+      "label": "Betala räkningar",
+      "status": "todo",
+      "swimlane": "monthlies",
+      "index": 0
+    },
+    {
+      "id": "m2",
+      "label": "Lämna in arbetsgivardeklaration",
+      "status": "todo",
+      "swimlane": "monthlies",
+      "index": 1
+    },
+    {
+      "id": "o1",
+      "label": "Fixa uppdrag",
+      "status": "todo",
+      "swimlane": "singles",
+      "index": 0
+    }
+  ]
+}

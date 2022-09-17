@@ -1,19 +1,26 @@
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+
 import { useTodos } from '~/hooks/todos';
-import TodoRow from '~/components/TodoRow';
-import './todos.css';
+import Swimlane from '~/components/Swimlane';
 
 const Todos = () => {
-  const { todos, isLoading } = useTodos();
+  const { todos, isLoading, reorderTodos, isAuthenticated } = useTodos();
+
+  const onDragEnd = (result: DropResult) => {
+    reorderTodos(result);
+  };
+
+  if (!isAuthenticated) return null;
 
   if (isLoading) return <p>Loading todos...</p>;
 
   return (
-    <div className="Todos">
-      <TodoRow title="Dailies" todos={todos.dailies} />
-      <TodoRow title="Weeklies" todos={todos.weeklies} />
-      <TodoRow title="Monthlies" todos={todos.monthlies} />
-      <TodoRow title="Singles" todos={todos.singles} />
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Swimlane id="dailies" title="Dailies" todos={todos.dailies} />
+      <Swimlane id="weeklies" title="Weeklies" todos={todos.weeklies} />
+      <Swimlane id="monthlies" title="Monthlies" todos={todos.monthlies} />
+      <Swimlane id="singles" title="Singles" todos={todos.singles} />
+    </DragDropContext>
   );
 };
 

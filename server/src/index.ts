@@ -6,6 +6,7 @@ import controllers from '~/controllers';
 
 const app = express();
 
+app.use(express.json());
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(cors());

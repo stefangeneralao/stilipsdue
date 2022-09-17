@@ -1,6 +1,6 @@
 import { Request } from 'express';
 
-export interface GetUserAuthInfoRequest extends Request {
+export interface RequestWithAuth extends Request {
   auth?: {
     sub: string;
   };
