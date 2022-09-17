@@ -2,11 +2,11 @@ import axios, { AxiosRequestConfig } from 'axios';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const issuer = process.env.ISSUER_BASE_URL;
+const issuer = process.env.AUTH0_ISSUER_BASE_URL;
 const managementApiToken = { token: '' };
-const clientId = process.env.CLIENT_ID;
-const clientSecret = process.env.CLIENT_SECRET;
-const managementAudience = process.env.MANAGEMENT_AUDIENCE;
+const clientId = process.env.AUTH0_CLIENT_ID;
+const clientSecret = process.env.AUTH0_CLIENT_SECRET;
+const managementAudience = process.env.AUTH0_MANAGEMENT_AUDIENCE;
 
 export const getManagementApiToken = () => ({ ...managementApiToken });
 

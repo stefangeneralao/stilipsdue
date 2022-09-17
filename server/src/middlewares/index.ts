@@ -3,7 +3,7 @@ import { expressjwt } from 'express-jwt';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const issuer = process.env.ISSUER_BASE_URL;
+const issuer = process.env.AUTH0_ISSUER_BASE_URL;
 
 console.log({ issuer });
 

@@ -2,7 +2,7 @@ import { axiosRequestWithRetries, getManagementApiToken } from '~/utils';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const issuer = process.env.ISSUER_BASE_URL;
+const issuer = process.env.AUTH0_ISSUER_BASE_URL;
 
 export const getUser = async (userId: string): Promise<any> => {
   const configCallback = () => ({
