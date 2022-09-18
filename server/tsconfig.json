@@ -6,9 +6,10 @@
     "target": "es6",
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "baseUrl": ".",
+    "baseUrl": "../",
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["./server/src/*"],
+      "/types": ["./types"]
     }
   }
 }

@@ -3,6 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import controllers from '~/controllers';
+import MongoDBAdapter from './db/MongoDBAdapter';
 
 const app = express();
 

@@ -1,28 +1,37 @@
 import dotenv from 'dotenv';
+import { ObjectId } from 'mongodb';
 import { getUser } from '~/controllers/users/service';
-import { axiosRequestWithRetries, getManagementApiToken } from '~/utils';
+import MongoDBAdapter from '~/db/MongoDBAdapter';
+import { IMongoTodo } from '~/types';
+import {
+  axiosRequestWithRetries,
+  getManagementApiToken,
+  setAuth0UserMetadata,
+} from '~/utils';
+import { ITodo } from '/types';
 
 dotenv.config();
 
 const issuer = process.env.AUTH0_ISSUER_BASE_URL;
 
 export const getTodos = async (userId: string): Promise<any> => {
-  const user = await getUser(userId);
-  return user.user_metadata.todos;
+  // const user = await getUser(userId);
+  // return user.user_metadata.todos;
+
+  return await MongoDBAdapter.getUserTodos(userId);
 };
 
-export const setTodos = async (userId: string, todos: []) => {
-  const configCallback = () => ({
-    method: 'PATCH',
-    url: `${issuer}/api/v2/users/${userId}`,
-    headers: {
-      authorization: getManagementApiToken().token,
-      'content-type': 'application/json',
-    },
-    data: {
-      user_metadata: { todos },
-    },
+export const updateUserTodos = async (
+  userId: string,
+  todos: ITodo[]
+): Promise<void> => {
+  const mongoTodos = todos.map((todo) => {
+    return {
+      ...todo,
+      userId,
+    };
   });
 
-  await axiosRequestWithRetries(configCallback);
+  await MongoDBAdapter.updateUserTodos(userId, mongoTodos);
+  // setAuth0UserMetadata(userId, { todos });
 };

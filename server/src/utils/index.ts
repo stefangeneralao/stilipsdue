@@ -55,3 +55,22 @@ export const axiosRequestWithRetries = async (
 ) => {
   return await asyncCallWithRetries(() => axios.request(config()));
 };
+
+export const setAuth0UserMetadata = async (
+  userId: string,
+  userMetadata: any
+) => {
+  const configCallback = () => ({
+    method: 'PATCH',
+    url: `${issuer}/api/v2/users/${userId}`,
+    headers: {
+      authorization: getManagementApiToken().token,
+      'content-type': 'application/json',
+    },
+    data: {
+      user_metadata: userMetadata,
+    },
+  });
+
+  await axiosRequestWithRetries(configCallback);
+};

@@ -6,6 +6,8 @@ import { defaultTodos } from '~/constants';
 import { todosToArray, groupTodosBySwimlane } from '~/utils';
 import { DropResult } from 'react-beautiful-dnd';
 
+const apiUrl = 'http://localhost:3001';
+
 export const useTodos = () => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [fetchingState, setFetchingState] = useState<
@@ -23,7 +25,7 @@ export const useTodos = () => {
 
       const {
         data: { todos: fetchedTodos },
-      } = await axios.get<{ todos: ITodo[] }>('http://localhost:3001/todos', {
+      } = await axios.get<{ todos: ITodo[] }>(`${apiUrl}/todos`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,7 +50,7 @@ export const useTodos = () => {
     try {
       const token = await getAccessTokenSilently();
 
-      await axios.post('http://localhost:3001/todos', todosArray, {
+      await axios.patch(`${apiUrl}/todos`, todosArray, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',

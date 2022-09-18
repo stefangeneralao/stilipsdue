@@ -1,6 +1,6 @@
-export type TTodoStatus = 'todo' | 'inProgress' | 'done';
+export type TTodoStatus = "todo" | "inProgress" | "done";
 
-export type TSwimlane = 'dailies' | 'weeklies' | 'monthlies' | 'singles';
+export type TSwimlane = "dailies" | "weeklies" | "monthlies" | "singles";
 
 export interface ITodo {
   id: string;
