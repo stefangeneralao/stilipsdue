@@ -1,5 +1,5 @@
 import { columnKeys, defaultTodos } from '~/constants';
-import { ITodo, ITodos } from '~/types';
+import { ITodo, ITodos } from '/types';
 
 export const groupTodosBySwimlane = (todos: ITodo[]): ITodos =>
   todos.reduce<ITodos>((previousValue, currentValue) => {
@@ -10,8 +10,8 @@ export const groupTodosBySwimlane = (todos: ITodo[]): ITodos =>
     };
   }, defaultTodos);
 
-export const groupTodosByStatus = (todos: ITodo[]) =>
-  todos.reduce(
+export const groupTodosByStatus = (todos: ITodo[]) => {
+  const groupedTodos = todos.reduce(
     (previousValue, currentValue) => {
       const { status } = currentValue;
 
@@ -31,5 +31,28 @@ export const groupTodosByStatus = (todos: ITodo[]) =>
     >
   );
 
+  const sortedByIndex = Object.fromEntries(
+    Object.entries(groupedTodos).map(([key, value]) => [
+      key,
+      sortTodosArrayByIndex(value),
+    ])
+  );
+
+  return sortedByIndex;
+};
+
 export const todosToArray = (todos: ITodos): ITodo[] =>
   Object.values(todos).flat();
+
+export const sortTodosArrayByIndex = (todos: ITodo[]): ITodo[] => {
+  const newTodos = [...todos];
+  newTodos.sort((a, b) => {
+    const indexA = a.index;
+    const indexB = b.index;
+
+    if (indexA < indexB) return -1;
+    if (indexB > indexB) return 1;
+    return 0;
+  });
+  return newTodos;
+};

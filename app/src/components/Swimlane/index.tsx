@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 
-import { ITodo } from '~/types';
-import StrictModeDroppable from '~/components/StrictModeDroppable';
-import Todo from '~/components/Todo';
-import { columnKeys, columns } from '~/constants';
+import { ITodo, TSwimlane } from '/types';
+import { columnKeys } from '~/constants';
 import { groupTodosByStatus } from '~/utils';
+import StatusColumn from '../StatusColumn';
 
 const StyledSwimlane = styled.div`
   min-height: 300px;
@@ -13,33 +12,13 @@ const StyledSwimlane = styled.div`
   margin: 20px 0;
 `;
 
-const Columns = styled.div`
+const StatusColumns = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 15px;
 
   height: 100%;
   min-width: 786px;
-`;
-
-const ColumnTitle = styled.h3`
-  padding: 10px 15px;
-  margin: 10px;
-  border-bottom: solid #ddd 1px;
-`;
-
-const TodoList = styled.div<{ isDraggingOver: boolean }>`
-  background-color: ${(props) =>
-    props.isDraggingOver ? '#a9a28e' : 'transparent'};
-  transition: 300ms;
-  height: 100%;
-  padding: 10px;
-`;
-
-const Column = styled.div`
-  display: grid;
-  grid-template-rows: min-content auto;
-  height: 100%;
 `;
 
 const SwimlaneTitle = styled.h2`
@@ -49,43 +28,25 @@ const SwimlaneTitle = styled.h2`
 interface Props {
   title: string;
   todos: ITodo[];
-  id: string;
+  id: TSwimlane;
 }
 
 const Swimlane = ({ title, todos, id }: Props) => {
+  const todosGroupedByStatus = groupTodosByStatus(todos);
+
   return (
     <StyledSwimlane>
       <SwimlaneTitle>{title}</SwimlaneTitle>
-      <Columns>
+      <StatusColumns>
         {columnKeys.map((columnKey) => (
-          <Column key={columnKey}>
-            <ColumnTitle>{columns[columnKey].friendlyName}</ColumnTitle>
-            <StrictModeDroppable
-              droppableId={`swimlane:${id}-status:${columnKey}`}
-            >
-              {(provided, snapshot) => (
-                <>
-                  <TodoList
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    isDraggingOver={snapshot.isDraggingOver}
-                  >
-                    {groupTodosByStatus(todos)[columnKey].map((todo) => (
-                      <Todo
-                        key={todo.id}
-                        id={todo.id}
-                        index={todo.index}
-                        label={todo.label}
-                      />
-                    ))}
-                    {provided.placeholder}
-                  </TodoList>
-                </>
-              )}
-            </StrictModeDroppable>
-          </Column>
+          <StatusColumn
+            key={columnKey}
+            status={columnKey}
+            swimlaneId={id}
+            todos={todosGroupedByStatus[columnKey]}
+          />
         ))}
-      </Columns>
+      </StatusColumns>
     </StyledSwimlane>
   );
 };

@@ -1,6 +1,6 @@
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
-import { useTodos } from '~/hooks/todos';
+import { useTodos } from '~/context/todos';
 import Swimlane from '~/components/Swimlane';
 
 const Todos = () => {

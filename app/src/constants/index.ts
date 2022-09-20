@@ -1,4 +1,6 @@
-export const defaultTodos = {
+import { ITodos } from '/types';
+
+export const defaultTodos: ITodos = {
   dailies: [],
   weeklies: [],
   monthlies: [],

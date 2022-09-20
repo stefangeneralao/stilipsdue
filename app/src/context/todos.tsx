@@ -1,21 +1,42 @@
-import axios from 'axios';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useEffect, useState } from 'react';
-import { ITodo, ITodos, TSwimlane, TTodoStatus } from '~/types';
+import axios from 'axios';
+import { v4 as uuid } from 'uuid';
+import { ITodo, ITodos, TSwimlane, TTodoStatus } from '/types';
 import { defaultTodos } from '~/constants';
-import { todosToArray, groupTodosBySwimlane } from '~/utils';
+import {
+  todosToArray,
+  groupTodosBySwimlane,
+  groupTodosByStatus,
+} from '~/utils';
 import { DropResult } from 'react-beautiful-dnd';
 
 const apiUrl = 'http://localhost:3001';
 
-export const useTodos = () => {
+const defaultContext = {
+  isLoading: false,
+  isFailed: false,
+  isAuthenticated: false,
+  todos: { ...defaultTodos },
+  refetchTodos: () => {},
+  reorderTodos: (_: DropResult) => {},
+  addTodo: (label: string, swimlaneId: TSwimlane, status: TTodoStatus) => {},
+};
+
+const TodosContext = createContext(defaultContext);
+
+interface Props {
+  children: React.ReactNode;
+}
+
+export const TodosProvider = ({ children }: Props) => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [fetchingState, setFetchingState] = useState<
     'PENDING' | 'LOADING' | 'FAILED'
   >('LOADING');
   const [todos, setTodos] = useState<ITodos>(defaultTodos);
 
-  const refetchTodos = async () => {
+  const refetchTodos = async (): Promise<void> => {
     if (!user) return;
 
     try {
@@ -38,7 +59,6 @@ export const useTodos = () => {
       console.log('Failed to get todos');
       console.log(e);
       setFetchingState('FAILED');
-      return [];
     } finally {
       setFetchingState('PENDING');
     }
@@ -61,7 +81,7 @@ export const useTodos = () => {
     }
   };
 
-  const reorderTodos = async (result: DropResult) => {
+  const reorderTodos = async (result: DropResult): Promise<void> => {
     const { draggableId, destination, source } = result;
     if (!destination) return;
 
@@ -184,6 +204,58 @@ export const useTodos = () => {
   const findTodoById = (id: string): ITodo | undefined =>
     todosToArray(todos).find((todo) => todo.id === id);
 
+  const postTodo = async (todo: ITodo) => {
+    try {
+      const token = await getAccessTokenSilently();
+
+      return await axios.post<ITodo[]>(`${apiUrl}/todos`, [todo], {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addTodo = async (
+    label: string,
+    swimlane: TSwimlane,
+    status: TTodoStatus
+  ) => {
+    const temporaryId = uuid();
+    const targetSwimlane = groupTodosByStatus(todos[swimlane]);
+    const targetList = targetSwimlane[status];
+    const index = targetList.length;
+
+    const temporaryTodo: ITodo = {
+      id: temporaryId,
+      index,
+      label,
+      status,
+      swimlane,
+    };
+
+    const temporaryNewSwimlane = [
+      ...Object.values(targetSwimlane).flat(),
+      temporaryTodo,
+    ];
+
+    const temporaryNewTodos = {
+      ...todos,
+      [swimlane]: temporaryNewSwimlane,
+    };
+
+    setTodos(temporaryNewTodos);
+    try {
+      const newTodos = await postTodo(temporaryTodo);
+      console.log(newTodos);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     refetchTodos();
   }, [isAuthenticated]);
@@ -191,12 +263,23 @@ export const useTodos = () => {
   const isLoading = fetchingState === 'LOADING';
   const isFailed = fetchingState === 'FAILED';
 
-  return {
+  const value = {
     isLoading,
     isFailed,
     isAuthenticated,
     todos,
     refetchTodos,
     reorderTodos,
+    addTodo,
   };
+
+  return (
+    <TodosContext.Provider value={value}>{children}</TodosContext.Provider>
+  );
+};
+
+export const useTodos = () => {
+  const value = useContext(TodosContext);
+
+  return value;
 };

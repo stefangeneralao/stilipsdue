@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Auth0Provider } from '@auth0/auth0-react';
 
+import { TodosProvider } from '~/context/todos';
+
 import App from './components/App';
 import './index.css';
 
@@ -13,7 +15,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       redirectUri={`${window.location.origin}`}
       audience="https://api.test"
     >
-      <App />
+      <TodosProvider>
+        <App />
+      </TodosProvider>
     </Auth0Provider>
   </React.StrictMode>
 );

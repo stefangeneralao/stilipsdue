@@ -32,6 +32,17 @@ export const updateUserTodos = async (
     };
   });
 
-  await MongoDBAdapter.updateUserTodos(userId, mongoTodos);
+  await MongoDBAdapter.updateUserTodos(mongoTodos);
   // setAuth0UserMetadata(userId, { todos });
+};
+
+export const createUserTodos = async (userId: string, todos: ITodo[]) => {
+  const mongoTodos = todos.map((todo) => {
+    return {
+      ...todo,
+      userId,
+    };
+  });
+
+  await MongoDBAdapter.createUserTodos(mongoTodos);
 };

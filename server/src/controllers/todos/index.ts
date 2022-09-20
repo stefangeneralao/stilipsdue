@@ -1,7 +1,7 @@
 import { Router, Response } from 'express';
 import { checkJwt } from '~/middlewares';
 import { RequestWithAuth } from '~/types';
-import { getTodos, updateUserTodos } from './service';
+import { createUserTodos, getTodos, updateUserTodos } from './service';
 
 const router = Router();
 
@@ -23,6 +23,18 @@ router.patch('/', checkJwt, async (req: RequestWithAuth, res: Response) => {
 
   try {
     await updateUserTodos(userId, req.body);
+    res.send();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
+});
+
+router.post('/', checkJwt, async (req: RequestWithAuth, res: Response) => {
+  const userId = req.auth.sub;
+
+  try {
+    await createUserTodos(userId, req.body);
     res.send();
   } catch (error) {
     console.log(error);

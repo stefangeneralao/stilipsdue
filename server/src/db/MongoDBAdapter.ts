@@ -35,10 +35,7 @@ class MongoDBAdapter {
     });
   };
 
-  static updateUserTodos = async (
-    userId: string,
-    todos: (ITodo & { userId: string })[]
-  ) => {
+  static updateUserTodos = async (todos: (ITodo & { userId: string })[]) => {
     const mongoDBBulk =
       MongoDBAdapter.todosCollection.initializeUnorderedBulkOp();
     todos.forEach((todo) => {
@@ -52,6 +49,17 @@ class MongoDBAdapter {
       mongoDBBulk.find({ _id: new ObjectId(todo.id) }).replaceOne(newDocument);
     });
     await mongoDBBulk.execute();
+  };
+
+  static createUserTodos = async (todos: (ITodo & { userId: string })[]) => {
+    const mongoTodos = todos.map((todo) => {
+      const { id, ...rest } = todo;
+      return rest;
+    });
+
+    console.log(mongoTodos);
+
+    await MongoDBAdapter.todosCollection.insertMany(mongoTodos);
   };
 
   static addListItem = async (listId: string, title: string) => {
