@@ -56,3 +56,12 @@ export const sortTodosArrayByIndex = (todos: ITodo[]): ITodo[] => {
   });
   return newTodos;
 };
+
+export const sortTodosByIndexCallback = (a: ITodo, b: ITodo) => {
+  const indexA = a.index;
+  const indexB = b.index;
+
+  if (indexA < indexB) return -1;
+  if (indexB > indexB) return 1;
+  return 0;
+};

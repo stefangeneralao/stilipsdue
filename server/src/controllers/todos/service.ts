@@ -37,12 +37,10 @@ export const updateUserTodos = async (
 };
 
 export const createUserTodos = async (userId: string, todos: ITodo[]) => {
-  const mongoTodos = todos.map((todo) => {
-    return {
-      ...todo,
-      userId,
-    };
-  });
+  const mongoTodos = todos.map((todo) => ({
+    ...todo,
+    userId,
+  }));
 
-  await MongoDBAdapter.createUserTodos(mongoTodos);
+  return await MongoDBAdapter.createUserTodos(mongoTodos);
 };

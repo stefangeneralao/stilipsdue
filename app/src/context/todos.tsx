@@ -8,6 +8,7 @@ import {
   todosToArray,
   groupTodosBySwimlane,
   groupTodosByStatus,
+  sortTodosByIndexCallback,
 } from '~/utils';
 import { DropResult } from 'react-beautiful-dnd';
 
@@ -106,9 +107,11 @@ export const TodosProvider = ({ children }: Props) => {
       .split(':')[1] as TTodoStatus;
 
     if (destinationDroppableId === sourceDroppableId) {
-      const destinationList = todos[destinationSwimlaneId].filter(
-        (todo) => todo.status === destinationStatus && todo.id !== draggableId
-      );
+      const destinationList = todos[destinationSwimlaneId]
+        .filter(
+          (todo) => todo.status === destinationStatus && todo.id !== draggableId
+        )
+        .sort(sortTodosByIndexCallback);
       destinationList.splice(destinationIndex, 0, draggedTodo);
 
       const destinationListAdjustedIndex = destinationList.map(
@@ -208,12 +211,14 @@ export const TodosProvider = ({ children }: Props) => {
     try {
       const token = await getAccessTokenSilently();
 
-      return await axios.post<ITodo[]>(`${apiUrl}/todos`, [todo], {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      return (
+        await axios.post<ITodo[]>(`${apiUrl}/todos`, [todo], {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+      ).data;
     } catch (error) {
       console.log(error);
     }
@@ -249,8 +254,14 @@ export const TodosProvider = ({ children }: Props) => {
 
     setTodos(temporaryNewTodos);
     try {
-      const newTodos = await postTodo(temporaryTodo);
-      console.log(newTodos);
+      const insertedTodos = (await postTodo(temporaryTodo)) || [];
+      console.log(insertedTodos);
+
+      const newTodos = {
+        ...todos,
+        [swimlane]: [...todos[swimlane], ...insertedTodos],
+      };
+      setTodos(newTodos);
     } catch (error) {
       console.log(error);
     }

@@ -34,8 +34,8 @@ router.post('/', checkJwt, async (req: RequestWithAuth, res: Response) => {
   const userId = req.auth.sub;
 
   try {
-    await createUserTodos(userId, req.body);
-    res.send();
+    const insertedTodos = await createUserTodos(userId, req.body);
+    res.send(insertedTodos);
   } catch (error) {
     console.log(error);
     res.status(500).send();
