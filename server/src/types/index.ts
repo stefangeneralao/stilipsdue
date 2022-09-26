@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { ObjectId } from 'mongodb';
-import { ITodo } from '/types';
+import { Task } from '/types';
 
 export interface RequestWithAuth extends Request {
   auth?: {
@@ -8,7 +8,7 @@ export interface RequestWithAuth extends Request {
   };
 }
 
-export type IMongoTodo = Omit<ITodo, 'id'> & {
+export type MongoTask = Omit<Task, 'id'> & {
   userId: string;
   _id?: ObjectId;
 };

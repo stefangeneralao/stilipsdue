@@ -1,11 +1,5 @@
 const jwks = require('jwks-rsa');
 import { expressjwt } from 'express-jwt';
-import dotenv from 'dotenv';
-dotenv.config();
-
-const issuer = process.env.AUTH0_ISSUER_BASE_URL;
-
-console.log({ issuer });
 
 export const checkJwt = expressjwt({
   secret: jwks.expressJwtSecret({

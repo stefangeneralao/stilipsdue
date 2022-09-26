@@ -1,18 +1,18 @@
-export type TTodoStatus = "todo" | "inProgress" | "done";
+export const statusIds = ["todo", "inProgress", "done"] as const;
+export type StatusId = typeof statusIds[number];
 
-export type TSwimlane = "dailies" | "weeklies" | "monthlies" | "singles";
+export const swimlaneIds = [
+  "dailies",
+  "weeklies",
+  "monthlies",
+  "singles",
+] as const;
+export type SwimlaneId = typeof swimlaneIds[number];
 
-export interface ITodo {
+export interface Task {
   id: string;
   label: string;
-  status: TTodoStatus;
-  swimlane: TSwimlane;
+  status: StatusId;
+  swimlane: SwimlaneId;
   index: number;
-}
-
-export interface ITodos {
-  dailies: ITodo[];
-  weeklies: ITodo[];
-  monthlies: ITodo[];
-  singles: ITodo[];
 }

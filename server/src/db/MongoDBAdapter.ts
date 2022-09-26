@@ -1,7 +1,7 @@
 import { MongoClient, ObjectID, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
-import { IMongoTodo } from '~/types';
-import { ITodo } from '/types';
+import { MongoTask } from '~/types';
+import { Task } from '/types';
 dotenv.config();
 
 const {
@@ -15,18 +15,18 @@ const uri = `mongodb+srv://${mongoDBUser}:${mongoDBPassword}@${mongoDBCluster}/?
 class MongoDBAdapter {
   private static readonly client = new MongoClient(uri);
   private static readonly database = MongoDBAdapter.client.db('stilipsdueDB');
-  private static readonly todosCollection =
-    MongoDBAdapter.database.collection<IMongoTodo>('todos');
+  private static readonly tasksCollection =
+    MongoDBAdapter.database.collection<MongoTask>('tasks');
 
   static connect = () => MongoDBAdapter.client.connect();
 
-  static getUserTodos = async (userId: string) => {
-    const mongoTodos = await MongoDBAdapter.todosCollection
+  static getUserTasks = async (userId: string) => {
+    const mongoTasks = await MongoDBAdapter.tasksCollection
       .find({ userId: { $eq: userId } })
       .toArray();
 
-    return mongoTodos.map((mongoTodo) => {
-      const { _id, ...rest } = mongoTodo;
+    return mongoTasks.map((mongoTask) => {
+      const { _id, ...rest } = mongoTask;
 
       return {
         id: _id,
@@ -35,37 +35,40 @@ class MongoDBAdapter {
     });
   };
 
-  static updateUserTodos = async (todos: (ITodo & { userId: string })[]) => {
+  static updateUserTasks = async (tasks: (Task & { userId: string })[]) => {
     const mongoDBBulk =
-      MongoDBAdapter.todosCollection.initializeUnorderedBulkOp();
-    todos.forEach((todo) => {
-      const { id, ...rest } = todo;
+      MongoDBAdapter.tasksCollection.initializeUnorderedBulkOp();
+    tasks.forEach((task) => {
+      const { id, ...rest } = task;
 
       const newDocument = {
         _id: new ObjectId(id),
         ...rest,
       };
 
-      mongoDBBulk.find({ _id: new ObjectId(todo.id) }).replaceOne(newDocument);
+      mongoDBBulk.find({ _id: new ObjectId(task.id) }).replaceOne(newDocument);
     });
     await mongoDBBulk.execute();
   };
 
-  static createUserTodos = async (todos: (ITodo & { userId: string })[]) => {
-    const mongoTodos = todos.map((todo) => {
-      const { id, ...rest } = todo;
+  static createUserTasks = async (tasks: (Task & { userId: string })[]) => {
+    const mongoTasks = tasks.map((task) => {
+      const { id, ...rest } = task;
       return rest;
     });
 
-    const { insertedIds } = await MongoDBAdapter.todosCollection.insertMany(
-      mongoTodos.map((todo) => Object.assign({}, todo))
+    const { insertedIds } = await MongoDBAdapter.tasksCollection.insertMany(
+      mongoTasks.map((task) => Object.assign({}, task))
     );
 
-    return mongoTodos.map((todo, index) => ({
-      ...todo,
+    return mongoTasks.map((task, index) => ({
+      ...task,
       id: insertedIds[index].toString(),
     }));
   };
+
+  static createUserTask = async (task: any) =>
+    await MongoDBAdapter.tasksCollection.insertOne(task);
 }
 
 MongoDBAdapter.connect();

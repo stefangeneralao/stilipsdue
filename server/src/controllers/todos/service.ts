@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import { ObjectId } from 'mongodb';
 import { getUser } from '~/controllers/users/service';
 import MongoDBAdapter from '~/db/MongoDBAdapter';
-import { IMongoTodo } from '~/types';
+import { MongoTask } from '~/types';
 import {
   axiosRequestWithRetries,
   getManagementApiToken,
@@ -18,7 +18,7 @@ export const getTodos = async (userId: string): Promise<any> => {
   // const user = await getUser(userId);
   // return user.user_metadata.todos;
 
-  return await MongoDBAdapter.getUserTodos(userId);
+  return await MongoDBAdapter.getUserTasks(userId);
 };
 
 export const updateUserTodos = async (
@@ -32,7 +32,7 @@ export const updateUserTodos = async (
     };
   });
 
-  await MongoDBAdapter.updateUserTodos(mongoTodos);
+  await MongoDBAdapter.updateUserTasks(mongoTodos);
   // setAuth0UserMetadata(userId, { todos });
 };
 
@@ -42,5 +42,5 @@ export const createUserTodos = async (userId: string, todos: ITodo[]) => {
     userId,
   }));
 
-  return await MongoDBAdapter.createUserTodos(mongoTodos);
+  return await MongoDBAdapter.createUserTasks(mongoTodos);
 };

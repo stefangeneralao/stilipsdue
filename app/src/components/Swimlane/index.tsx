@@ -1,9 +1,9 @@
 import styled from 'styled-components';
-
-import { ITodo, TSwimlane } from '/types';
+import { SwimlaneId } from '/types';
 import { columnKeys } from '~/constants';
-import { groupTodosByStatus } from '~/utils';
-import StatusColumn from '../StatusColumn';
+import StatusColumn from '~/components/StatusColumn';
+import { Status } from '~/components/Tasks/redux/interfaces';
+import { StatusId } from '/types';
 
 const StyledSwimlane = styled.div`
   min-height: 300px;
@@ -27,13 +27,11 @@ const SwimlaneTitle = styled.h2`
 
 interface Props {
   title: string;
-  todos: ITodo[];
-  id: TSwimlane;
+  id: SwimlaneId;
+  statuses: { [id in StatusId]: Status };
 }
 
-const Swimlane = ({ title, todos, id }: Props) => {
-  const todosGroupedByStatus = groupTodosByStatus(todos);
-
+const Swimlane = ({ title, statuses, id }: Props) => {
   return (
     <StyledSwimlane>
       <SwimlaneTitle>{title}</SwimlaneTitle>
@@ -43,7 +41,7 @@ const Swimlane = ({ title, todos, id }: Props) => {
             key={columnKey}
             status={columnKey}
             swimlaneId={id}
-            todos={todosGroupedByStatus[columnKey]}
+            tasks={statuses[columnKey].tasks}
           />
         ))}
       </StatusColumns>

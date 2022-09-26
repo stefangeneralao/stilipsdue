@@ -1,12 +1,3 @@
-import { ITodos } from '/types';
-
-export const defaultTodos: ITodos = {
-  dailies: [],
-  weeklies: [],
-  monthlies: [],
-  singles: [],
-};
-
 export const columns = {
   todo: {
     friendlyName: 'Todo',

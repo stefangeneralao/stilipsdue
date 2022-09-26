@@ -13,6 +13,17 @@ app.use(helmet());
 app.use(cors());
 app.use(controllers);
 
+// (async () => {
+//   const result = await MongoDBAdapter.tasksCollection
+//     .find({
+//       userId: { $eq: 'google-oauth2|104046422165335444848' },
+//       status: { $eq: 'done' },
+//     })
+//     .toArray();
+
+//   console.log(result);
+// });
+
 const port = 3001;
 app.listen(port, () => {
   console.log(`Listening to port ${3001}.`);

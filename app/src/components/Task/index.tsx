@@ -1,7 +1,7 @@
 import { Draggable } from 'react-beautiful-dnd';
 import styled from 'styled-components';
 
-const StyledTodo = styled.div<{ isDragging: boolean }>`
+const StyledTask = styled.div<{ isDragging: boolean }>`
   background-color: white;
   display: flex;
   align-items: center;
@@ -23,22 +23,21 @@ interface Props {
   index: number;
 }
 
-const Todo = ({ label, id, index }: Props) => {
+const Task = ({ label, id, index }: Props) => {
   return (
     <Draggable draggableId={id} index={index}>
       {(provided, snapshot) => (
-        <StyledTodo
+        <StyledTask
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
-          className="Todo"
           isDragging={snapshot.isDragging}
         >
           <Label>{label}</Label>
-        </StyledTodo>
+        </StyledTask>
       )}
     </Draggable>
   );
 };
 
-export default Todo;
+export default Task;
