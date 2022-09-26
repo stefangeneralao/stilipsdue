@@ -33,7 +33,7 @@ export const apiSlice = createApi({
       invalidatesTags: ['Tasks'],
     }),
     updateTasks: builder.mutation({
-      query: (tasks: Task[]) => ({
+      query: (tasks: Partial<Task>[]) => ({
         url: '/tasks',
         method: 'PATCH',
         body: tasks,

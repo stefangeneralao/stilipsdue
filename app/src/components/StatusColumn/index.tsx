@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 import StrictModeDroppable from '~/components/StrictModeDroppable';
 import { columns } from '~/constants';
-import Task from '~/components/Task';
+import Task from '~/components/Tasks/Task';
 import NewTaskField from '~/components/NewTaskField';
 import { StatusId, SwimlaneId, Task as TaskType } from '/types';
+import { Draggable } from 'react-beautiful-dnd';
 
 const StyledStatusColumn = styled.div`
   display: grid;
@@ -46,12 +47,21 @@ const StatusColumn = ({ status, swimlaneId, tasks }: Props) => (
             ref={provided.innerRef}
           >
             {tasks.map((task) => (
-              <Task
-                key={task.id}
-                id={task.id}
-                index={task.index}
-                label={task.label}
-              />
+              <Draggable draggableId={task.id} index={task.index} key={task.id}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                  >
+                    <Task
+                      label={task.label}
+                      isDragging={snapshot.isDragging}
+                      id={task.id}
+                    />
+                  </div>
+                )}
+              </Draggable>
             ))}
             <NewTaskField swimlaneId={swimlaneId} statusId={status} />
             {provided.placeholder}

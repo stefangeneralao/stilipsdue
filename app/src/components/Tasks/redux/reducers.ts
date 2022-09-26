@@ -2,6 +2,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuid } from 'uuid';
 import { TasksState } from './interfaces';
 import { StatusId, SwimlaneId } from '/types';
+import { findTask } from '~/utils';
 
 export const addTask = (
   state: TasksState,
@@ -23,4 +24,16 @@ export const addTask = (
       swimlane: swimlaneId,
     },
   ];
+};
+
+export const renameTask = (
+  state: TasksState,
+  action: PayloadAction<{
+    id: string;
+    label: string;
+  }>
+) => {
+  const { id, label } = action.payload;
+  const targetTask = findTask(state, id);
+  targetTask.label = label;
 };

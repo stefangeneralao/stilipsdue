@@ -46,7 +46,9 @@ class MongoDBAdapter {
         ...rest,
       };
 
-      mongoDBBulk.find({ _id: new ObjectId(task.id) }).replaceOne(newDocument);
+      mongoDBBulk
+        .find({ _id: new ObjectId(task.id) })
+        .updateOne({ $set: { ...newDocument } });
     });
     await mongoDBBulk.execute();
   };

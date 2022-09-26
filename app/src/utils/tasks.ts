@@ -1,6 +1,7 @@
 import { TasksState } from '~/components/Tasks/redux/interfaces';
 import { Task, StatusId, SwimlaneId } from '/types';
 import { transposeMatrix } from '.';
+import { store } from '~/store';
 
 export const groupBySwimlane = (
   tasks: Task[]
@@ -159,4 +160,13 @@ export const diffTasks = (
   });
 
   return diff;
+};
+
+export const findTask = (state: TasksState, id: string): Task => {
+  const searchResult = Object.values(state.swimlanes).flatMap((swimlane) =>
+    Object.values(swimlane.statuses).flatMap((status) =>
+      status.tasks.flatMap((task) => (task.id === id ? task : []))
+    )
+  );
+  return searchResult[0];
 };
