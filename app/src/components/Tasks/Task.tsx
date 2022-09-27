@@ -10,7 +10,6 @@ const StyledTask = styled.div<{ isDragging: boolean }>`
   align-items: center;
   box-shadow: ${(props) =>
     props.isDragging ? '0 2px 5px #00000033' : '0 1px 2px #00000033'};
-  margin-bottom: 2px;
 
   cursor: grab;
 `;

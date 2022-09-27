@@ -1,26 +1,25 @@
 import { TasksState } from '~/components/Tasks/redux/interfaces';
-import { Task, StatusId, SwimlaneId } from '/types';
+import { Task, StatusId, swimlaneIds, SwimlaneId } from '/types';
 import { transposeMatrix } from '.';
-import { store } from '~/store';
 
 export const groupBySwimlane = (
   tasks: Task[]
 ): { [id in SwimlaneId]: { friendlyName: string; tasks: Task[] } } => {
   const initialValue = {
     dailies: {
-      friendlyName: '',
+      friendlyName: getFriendlyName('dailies'),
       tasks: [],
     },
     weeklies: {
-      friendlyName: '',
+      friendlyName: getFriendlyName('weeklies'),
       tasks: [],
     },
     monthlies: {
-      friendlyName: '',
+      friendlyName: getFriendlyName('monthlies'),
       tasks: [],
     },
     singles: {
-      friendlyName: '',
+      friendlyName: getFriendlyName('singles'),
       tasks: [],
     },
   };

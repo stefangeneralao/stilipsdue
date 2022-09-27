@@ -15,7 +15,6 @@ const StyledSwimlane = styled.div`
 const StatusColumns = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 15px;
 
   height: 100%;
   min-width: 786px;

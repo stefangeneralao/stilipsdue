@@ -30,12 +30,6 @@ const Input = styled.input`
     text-align: center;
   }
 
-  :hover {
-    box-shadow: 0 1px 2px #00000033;
-    background-color: white;
-    transition: 100ms;
-  }
-
   :focus {
     box-shadow: 0 1px 2px #3157ff;
     background-color: white;

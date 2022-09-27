@@ -8,25 +8,31 @@ import { Draggable } from 'react-beautiful-dnd';
 
 const StyledStatusColumn = styled.div`
   display: grid;
-  grid-template-rows: min-content min-content auto;
+  grid-template-rows: min-content auto;
   height: 100%;
-  padding: 10px;
+  padding: 0px;
+  grid-gap: 2px;
 `;
 
 const ColumnTitle = styled.h3`
-  padding: 10px 15px;
+  padding-left: 15px;
+  margin: 0px 10px;
   border-bottom: solid #ddd 1px;
-  margin-bottom: 5px;
 `;
 
 const TaskList = styled.div<{ isDraggingOver: boolean }>`
   background-color: ${(props) =>
     props.isDraggingOver ? '#a9a28e' : 'transparent'};
   transition: 300ms;
+  padding: 10px;
 `;
 
-const DroppableContainer = styled.div`
-  height: 100%;
+const TaskContainer = styled.div`
+  padding: 1px 0;
+`;
+
+const NewTaskFieldContainer = styled.div`
+  height: 30px;
 `;
 
 interface Props {
@@ -40,33 +46,36 @@ const StatusColumn = ({ status, swimlaneId, tasks }: Props) => (
     {(provided, snapshot) => (
       <StyledStatusColumn>
         <ColumnTitle>{columns[status].friendlyName}</ColumnTitle>
-        <DroppableContainer>
-          <TaskList
-            isDraggingOver={snapshot.isDraggingOver}
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-          >
-            {tasks.map((task) => (
-              <Draggable draggableId={task.id} index={task.index} key={task.id}>
-                {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  >
-                    <Task
-                      label={task.label}
-                      isDragging={snapshot.isDragging}
-                      id={task.id}
-                    />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            <NewTaskField swimlaneId={swimlaneId} statusId={status} />
-            {provided.placeholder}
-          </TaskList>
-        </DroppableContainer>
+
+        <TaskList
+          isDraggingOver={snapshot.isDraggingOver}
+          {...provided.droppableProps}
+          ref={provided.innerRef}
+        >
+          {tasks.map((task) => (
+            <Draggable draggableId={task.id} index={task.index} key={task.id}>
+              {(provided, snapshot) => (
+                <TaskContainer
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                >
+                  <Task
+                    label={task.label}
+                    isDragging={snapshot.isDragging}
+                    id={task.id}
+                  />
+                </TaskContainer>
+              )}
+            </Draggable>
+          ))}
+          <NewTaskFieldContainer>
+            {!snapshot.isDraggingOver && (
+              <NewTaskField swimlaneId={swimlaneId} statusId={status} />
+            )}
+          </NewTaskFieldContainer>
+          {provided.placeholder}
+        </TaskList>
       </StyledStatusColumn>
     )}
   </StrictModeDroppable>
