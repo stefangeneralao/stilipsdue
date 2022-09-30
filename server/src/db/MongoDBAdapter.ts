@@ -1,22 +1,24 @@
-import { MongoClient, ObjectID, ObjectId } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 import { MongoTask } from '~/types';
 import { Task } from '/types';
 dotenv.config();
 
 const {
-  MONGODB_USER: mongoDBUser,
-  MONGODB_PASSWORD: mongoDBPassword,
-  MONGODB_CLUSTER: mongoDBCluster,
+  MONGO_USER: mongoUser,
+  MONGO_PASSWORD: mongoPassword,
+  MONGO_CLUSTER: mongoCluster,
+  MONGO_DATABASE_NAME: mongoDatabaseName,
+  MONGO_COLLECTION_NAME: mongoCollectionName
 } = process.env;
 
-const uri = `mongodb+srv://${mongoDBUser}:${mongoDBPassword}@${mongoDBCluster}/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoCluster}/?retryWrites=true&w=majority`;
 
 class MongoDBAdapter {
   private static readonly client = new MongoClient(uri);
-  private static readonly database = MongoDBAdapter.client.db('stilipsdueDB');
+  private static readonly database = MongoDBAdapter.client.db(mongoDatabaseName);
   private static readonly tasksCollection =
-    MongoDBAdapter.database.collection<MongoTask>('tasks');
+    MongoDBAdapter.database.collection<MongoTask>(mongoCollectionName);
 
   static connect = () => MongoDBAdapter.client.connect();
 
