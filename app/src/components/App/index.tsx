@@ -5,8 +5,22 @@ import { sec } from '~/components/Api/security';
 import './index.css';
 
 function App() {
-  const { getAccessTokenSilently } = useAuth0();
+  const {
+    getAccessTokenSilently,
+    isAuthenticated,
+    loginWithRedirect,
+    isLoading,
+  } = useAuth0();
   sec.setAccessTokenSilently(getAccessTokenSilently);
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (!isAuthenticated) {
+    loginWithRedirect();
+    return null;
+  }
 
   return (
     <div className="app">
