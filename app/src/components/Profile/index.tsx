@@ -1,6 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import styled from 'styled-components';
 import AuthenticationButton from '~/components/AuthenticationButton';
+import logo from '~/assets/logo.svg'
 
 const StyledProfile = styled.div`
   text-align: center;
@@ -21,7 +22,7 @@ const Profile = () => {
   return (
     <StyledProfile>
       <AuthenticationButton>
-        <Img src="https://svgshare.com/i/mki.svg" />
+        <Img src={logo} />
       </AuthenticationButton>
       {user && isAuthenticated && <H1>Let's go, {user.name}!</H1>}
     </StyledProfile>
