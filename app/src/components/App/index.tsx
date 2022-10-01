@@ -1,10 +1,16 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import styled from 'styled-components';
 import Profile from '~/components/Profile';
 import Tasks from '~/components/Tasks';
 import { sec } from '~/components/Api/security';
-import './index.css';
 
-function App() {
+const StyledApp = styled.div`
+  max-width: 768px;
+  margin: auto;
+  word-wrap: break-word;
+`;
+
+const App = () => {
   const {
     getAccessTokenSilently,
     isAuthenticated,
@@ -23,11 +29,11 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <StyledApp>
       <Profile />
       <Tasks />
-    </div>
+    </StyledApp>
   );
-}
+};
 
 export default App;
