@@ -3,8 +3,9 @@ import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useUpdateTasksMutation } from '~/components/Api/apiSlice';
 import { renameTask } from './redux/tasksSlice';
+import { StatusId } from '/types';
 
-const StyledTask = styled.div<{ isDragging: boolean }>`
+const StyledTask = styled.div<{ isDragging: boolean; lineThrough: boolean }>`
   background-color: white;
   display: flex;
   align-items: center;
@@ -12,6 +13,7 @@ const StyledTask = styled.div<{ isDragging: boolean }>`
     props.isDragging ? '0 2px 5px #00000033' : '0 1px 2px #00000033'};
 
   cursor: grab;
+  text-decoration: ${(props) => (props.lineThrough ? 'line-through' : 'none')};
 `;
 
 const Label = styled.p`
@@ -49,9 +51,10 @@ interface Props {
   id: string;
   label: string;
   isDragging: boolean;
+  statusId: StatusId;
 }
 
-const Task = ({ label, isDragging, id }: Props) => {
+const Task = ({ label, isDragging, id, statusId }: Props) => {
   const [inputValue, setInputValue] = useState(label);
   const [isEditing, setIsEditing] = useState(false);
   const dispatch = useDispatch();
@@ -79,7 +82,11 @@ const Task = ({ label, isDragging, id }: Props) => {
   };
 
   return (
-    <StyledTask isDragging={isDragging} onClick={onClickHandler}>
+    <StyledTask
+      isDragging={isDragging}
+      onClick={onClickHandler}
+      lineThrough={statusId === 'done'}
+    >
       {isEditing ? (
         <Form onSubmit={onSubmitHandler}>
           <Input
