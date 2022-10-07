@@ -13,7 +13,7 @@ import './index.css';
         <Auth0Provider
           domain="stefangeneralao.eu.auth0.com"
           clientId="iY4ozQWd4RMbje0JO7JnEvd9SyE9f5P2"
-          redirectUri={`${window.location.origin}`}
+          redirectUri={`${window.location.origin}${import.meta.env.BASE_URL}`}
           audience="https://api.test"
         >
           <App />

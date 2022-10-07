@@ -15,7 +15,11 @@ const AuthenticationButton = ({ children }: Props) => {
   if (isAuthenticated) {
     return (
       <StyledAuthenticationButton
-        onClick={() => logout({ returnTo: window.location.origin })}
+        onClick={() =>
+          logout({
+            returnTo: `${window.location.origin}${import.meta.env.BASE_URL}`,
+          })
+        }
       >
         {children}
       </StyledAuthenticationButton>

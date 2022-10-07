@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  stilipsdue-backend:
+    build: server
+    platform: linux/amd64
+    image: docker.stefangeneralao.com/stilipsdue-backend
+    env_file:
+      - server/.env
+    ports:
+      - 3001:3001
+  stilipsdue-frontend:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    platform: linux/amd64
+    image: docker.stefangeneralao.com/stilipsdue-frontend
+    ports:
+      - 3000:80
