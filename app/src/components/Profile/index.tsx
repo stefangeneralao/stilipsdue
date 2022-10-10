@@ -1,13 +1,14 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import styled from 'styled-components';
 import AuthenticationButton from '~/components/AuthenticationButton';
-import logo from '~/assets/logo.svg'
+import logo from '~/assets/logo.svg';
 
 const StyledProfile = styled.div`
   text-align: center;
   margin: auto;
   width: 100%;
   position: relative;
+  font-size: 0.65rem;
 `;
 
 const Img = styled.img``;

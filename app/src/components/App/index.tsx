@@ -6,7 +6,7 @@ import { sec } from '~/components/Api/security';
 
 const StyledApp = styled.div`
   max-width: 768px;
-  margin: auto;
+  margin: 40px auto;
   word-wrap: break-word;
 `;
 
