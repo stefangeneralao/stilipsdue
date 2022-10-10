@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from 'mongodb';
+import { Filter, MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 import { MongoTask } from '~/types';
 import { Task } from '/types';
@@ -9,14 +9,27 @@ const {
   MONGO_PASSWORD: mongoPassword,
   MONGO_CLUSTER: mongoCluster,
   MONGO_DATABASE_NAME: mongoDatabaseName,
-  MONGO_COLLECTION_NAME: mongoCollectionName
+  MONGO_COLLECTION_NAME: mongoCollectionName,
 } = process.env;
+
+if (
+  !mongoUser ||
+  !mongoPassword ||
+  !mongoCluster ||
+  !mongoDatabaseName ||
+  !mongoCollectionName
+) {
+  throw new Error(
+    '.env must contain MONGO_USER, MONGO_PASSWORD, MONGO_CLUSTER, MONGO_DATABASE_NAME and MONGO_COLLECTION_NAME.'
+  );
+}
 
 const uri = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoCluster}/?retryWrites=true&w=majority`;
 
 class MongoDBAdapter {
   private static readonly client = new MongoClient(uri);
-  private static readonly database = MongoDBAdapter.client.db(mongoDatabaseName);
+  private static readonly database =
+    MongoDBAdapter.client.db(mongoDatabaseName);
   private static readonly tasksCollection =
     MongoDBAdapter.database.collection<MongoTask>(mongoCollectionName);
 
@@ -73,6 +86,10 @@ class MongoDBAdapter {
 
   static createUserTask = async (task: any) =>
     await MongoDBAdapter.tasksCollection.insertOne(task);
+
+  static deleteUserTasks = async (filter: Filter<MongoTask>) => {
+    await MongoDBAdapter.tasksCollection.deleteMany(filter);
+  };
 }
 
 MongoDBAdapter.connect();
