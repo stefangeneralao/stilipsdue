@@ -1,17 +1,29 @@
-import { CronJob } from 'cron';
+import { CronCommand, CronJob } from 'cron';
 import MongoDBAdapter from '~/db/MongoDBAdapter';
 
-const dailyJob = new CronJob('0 0 0 */1 * *', () => {
+class StockholmCronJob extends CronJob {
+  constructor(cronTime: string | Date, onTick: CronCommand) {
+    super(cronTime, onTick, null, false, 'Europe/Stockholm');
+  }
+}
+
+enum CronTimeEnum {
+  DAILY = '0 0 * * *',
+  WEEKLY = '0 0 * * 1',
+  MONTHLY = '0 0 1 * *',
+}
+
+const dailyJob = new StockholmCronJob(CronTimeEnum.DAILY, () => {
   console.log('Running daily job');
   MongoDBAdapter.updateAllTasksStatus('dailies', 'todo');
 });
 
-const weeklyJob = new CronJob('0 0 0 * * 0', () => {
+const weeklyJob = new StockholmCronJob(CronTimeEnum.WEEKLY, () => {
   console.log('Running weekly job');
   MongoDBAdapter.updateAllTasksStatus('weeklies', 'todo');
 });
 
-const monthlyJob = new CronJob('0 0 0 1 * *', () => {
+const monthlyJob = new StockholmCronJob(CronTimeEnum.MONTHLY, () => {
   console.log('Running monthly job');
   MongoDBAdapter.updateAllTasksStatus('monthlies', 'todo');
 });
