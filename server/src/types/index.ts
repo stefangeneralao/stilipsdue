@@ -1,14 +1,17 @@
 import { Request } from 'express';
 import { ObjectId } from 'mongodb';
-import { Task } from '/types';
+import { Task, TaskWithUserId } from '/types';
 
-export interface RequestWithAuth extends Request {
+export interface Auth {
   auth?: {
-    sub: string;
+    sub?: string;
   };
 }
 
-export type MongoTask = Omit<Task, 'id'> & {
-  userId: string;
+export type RequestWithAuth = Request & Auth;
+
+export type RequestWithUserTasks = Request<unknown, unknown, Task[]> & Auth;
+
+export type MongoTask = Omit<TaskWithUserId, 'id'> & {
   _id?: ObjectId;
 };

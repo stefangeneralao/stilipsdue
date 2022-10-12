@@ -1,7 +1,7 @@
 import { Filter, MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 import { MongoTask } from '~/types';
-import { Task } from '/types';
+import { StatusId, SwimlaneId, TaskWithUserId } from '/types';
 dotenv.config();
 
 const {
@@ -50,7 +50,7 @@ class MongoDBAdapter {
     });
   };
 
-  static updateUserTasks = async (tasks: (Task & { userId: string })[]) => {
+  static updateUserTasks = async (tasks: TaskWithUserId[]) => {
     const mongoDBBulk =
       MongoDBAdapter.tasksCollection.initializeUnorderedBulkOp();
     tasks.forEach((task) => {
@@ -68,7 +68,7 @@ class MongoDBAdapter {
     await mongoDBBulk.execute();
   };
 
-  static createUserTasks = async (tasks: (Task & { userId: string })[]) => {
+  static createUserTasks = async (tasks: TaskWithUserId[]) => {
     const mongoTasks = tasks.map((task) => {
       const { id, ...rest } = task;
       return rest;
@@ -90,6 +90,38 @@ class MongoDBAdapter {
   static deleteUserTasks = async (filter: Filter<MongoTask>) => {
     await MongoDBAdapter.tasksCollection.deleteMany(filter);
   };
+
+  static updateAllTasksStatus = async (
+    swimlane: SwimlaneId,
+    toStatus: StatusId
+  ) => {
+    const tasks = await MongoDBAdapter.findUserTasks({
+      swimlane: { $eq: swimlane },
+    });
+
+    const tasksGroupedByUser = tasks.reduce((acc, task) => {
+      if (!acc[task.userId]) {
+        acc[task.userId] = [];
+      }
+      acc[task.userId].push(task);
+      return acc;
+    }, {} as { [userId: string]: MongoTask[] });
+
+    const updatedDailyTasks = Object.values(tasksGroupedByUser).flatMap(
+      (tasks) =>
+        tasks.map(({ _id, ...rest }, index) => ({
+          ...rest,
+          index,
+          status: toStatus,
+          id: _id.toString(),
+        }))
+    );
+
+    await MongoDBAdapter.updateUserTasks(updatedDailyTasks);
+  };
+
+  static findUserTasks = async (filter: Filter<MongoTask>) =>
+    await MongoDBAdapter.tasksCollection.find(filter).toArray();
 }
 
 MongoDBAdapter.connect();
