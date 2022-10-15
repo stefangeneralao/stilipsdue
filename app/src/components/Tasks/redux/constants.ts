@@ -9,8 +9,8 @@ export const initialState: TasksState = {
           friendlyName: 'Todo',
           tasks: [],
         },
-        inProgress: {
-          friendlyName: 'In progress',
+        doASAP: {
+          friendlyName: 'In ASAP',
           tasks: [],
         },
         done: {
@@ -26,8 +26,8 @@ export const initialState: TasksState = {
           friendlyName: 'Todo',
           tasks: [],
         },
-        inProgress: {
-          friendlyName: 'In progress',
+        doASAP: {
+          friendlyName: 'In ASAP',
           tasks: [],
         },
         done: {
@@ -43,8 +43,8 @@ export const initialState: TasksState = {
           friendlyName: 'Todo',
           tasks: [],
         },
-        inProgress: {
-          friendlyName: 'In progress',
+        doASAP: {
+          friendlyName: 'In ASAP',
           tasks: [],
         },
         done: {
@@ -60,8 +60,8 @@ export const initialState: TasksState = {
           friendlyName: 'Todo',
           tasks: [],
         },
-        inProgress: {
-          friendlyName: 'In progress',
+        doASAP: {
+          friendlyName: 'In ASAP',
           tasks: [],
         },
         done: {

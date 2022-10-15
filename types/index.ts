@@ -1,4 +1,4 @@
-export const statusIds = ["todo", "inProgress", "done"] as const;
+export const statusIds = ["todo", "doASAP", "done"] as const;
 export type StatusId = typeof statusIds[number];
 
 export const swimlaneIds = [

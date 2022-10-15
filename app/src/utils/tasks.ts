@@ -1,6 +1,7 @@
 import { TasksState } from '~/components/Tasks/redux/interfaces';
 import { Task, StatusId, swimlaneIds, SwimlaneId } from '/types';
 import { transposeMatrix } from '.';
+import { friendlyNameMap } from '~/constants';
 
 export const groupBySwimlane = (
   tasks: Task[]
@@ -45,7 +46,7 @@ export const groupByStatus = (
       friendlyName: '',
       tasks: [],
     },
-    inProgress: {
+    doASAP: {
       friendlyName: '',
       tasks: [],
     },
@@ -115,16 +116,6 @@ export const compareTaskByKey = (key: keyof Task) => (a: Task, b: Task) => {
   if (a[key] < b[key]) return -1;
   if (a[key] > b[key]) return 1;
   return 0;
-};
-
-const friendlyNameMap = {
-  todo: 'Todo',
-  inProgress: 'In progress',
-  done: 'Done',
-  dailies: 'Dailies',
-  weeklies: 'Weeklies',
-  monthlies: 'Monthlies',
-  singles: 'Singles',
 };
 
 export const getFriendlyName = (key: keyof typeof friendlyNameMap) =>

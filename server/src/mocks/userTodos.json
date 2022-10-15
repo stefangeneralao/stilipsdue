@@ -10,14 +10,14 @@
     {
       "id": "d2",
       "label": "Stretcha",
-      "status": "inProgress",
+      "status": "doASAP",
       "swimlane": "dailies",
       "index": 0
     },
     {
       "id": "d3",
       "label": "Drick två liter vatten",
-      "status": "inProgress",
+      "status": "doASAP",
       "swimlane": "dailies",
       "index": 1
     },
