@@ -1,9 +1,9 @@
 export const columns = {
   todo: {
-    friendlyName: 'Todo',
+    friendlyName: 'Do',
   },
   inProgress: {
-    friendlyName: 'In progress',
+    friendlyName: 'Do ASAP',
   },
   done: {
     friendlyName: 'Done',
