@@ -19,3 +19,11 @@ export const updateUserTasks = async (userId: string, tasks: Task[]) => {
 
   return await MongoDBAdapter.updateUserTasks(mongoTasks);
 };
+
+export const deleteUserTask = async (taskId: string) => {
+  const { userId, status, swimlane } = await MongoDBAdapter.findTaskById(
+    taskId
+  );
+  await MongoDBAdapter.deleteUserTask(taskId);
+  await MongoDBAdapter.adjustTasksIndexes(userId, { status, swimlane });
+};

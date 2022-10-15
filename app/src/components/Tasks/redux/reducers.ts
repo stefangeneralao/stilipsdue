@@ -37,3 +37,16 @@ export const renameTask = (
   const targetTask = findTask(state, id);
   targetTask.label = label;
 };
+
+export const deleteTask = (
+  state: TasksState,
+  action: PayloadAction<{
+    id: string;
+  }>
+) => {
+  const { id } = action.payload;
+  const targetTask = findTask(state, id);
+  const targetStatus =
+    state.swimlanes[targetTask.swimlane].statuses[targetTask.status];
+  targetStatus.tasks = targetStatus.tasks.filter((task) => task.id !== id);
+};

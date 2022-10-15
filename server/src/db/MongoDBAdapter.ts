@@ -28,15 +28,14 @@ const uri = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoCluster}/?retryW
 
 class MongoDBAdapter {
   private static readonly client = new MongoClient(uri);
-  private static readonly database =
-    MongoDBAdapter.client.db(mongoDatabaseName);
+  private static readonly database = this.client.db(mongoDatabaseName);
   private static readonly tasksCollection =
-    MongoDBAdapter.database.collection<MongoTask>(mongoCollectionName);
+    this.database.collection<MongoTask>(mongoCollectionName);
 
-  static connect = () => MongoDBAdapter.client.connect();
+  static connect = () => this.client.connect();
 
   static getUserTasks = async (userId: string) => {
-    const mongoTasks = await MongoDBAdapter.tasksCollection
+    const mongoTasks = await this.tasksCollection
       .find({ userId: { $eq: userId } })
       .toArray();
 
@@ -51,8 +50,7 @@ class MongoDBAdapter {
   };
 
   static updateUserTasks = async (tasks: TaskWithUserId[]) => {
-    const mongoDBBulk =
-      MongoDBAdapter.tasksCollection.initializeUnorderedBulkOp();
+    const mongoDBBulk = this.tasksCollection.initializeUnorderedBulkOp();
     tasks.forEach((task) => {
       const { id, ...rest } = task;
 
@@ -74,7 +72,7 @@ class MongoDBAdapter {
       return rest;
     });
 
-    const { insertedIds } = await MongoDBAdapter.tasksCollection.insertMany(
+    const { insertedIds } = await this.tasksCollection.insertMany(
       mongoTasks.map((task) => Object.assign({}, task))
     );
 
@@ -85,17 +83,17 @@ class MongoDBAdapter {
   };
 
   static createUserTask = async (task: any) =>
-    await MongoDBAdapter.tasksCollection.insertOne(task);
+    await this.tasksCollection.insertOne(task);
 
   static deleteUserTasks = async (filter: Filter<MongoTask>) => {
-    await MongoDBAdapter.tasksCollection.deleteMany(filter);
+    await this.tasksCollection.deleteMany(filter);
   };
 
   static updateAllTasksStatus = async (
     swimlane: SwimlaneId,
     toStatus: StatusId
   ) => {
-    const tasks = await MongoDBAdapter.findUserTasks({
+    const tasks = await this.findUserTasks({
       swimlane: { $eq: swimlane },
     });
 
@@ -117,11 +115,41 @@ class MongoDBAdapter {
         }))
     );
 
-    await MongoDBAdapter.updateUserTasks(updatedDailyTasks);
+    await this.updateUserTasks(updatedDailyTasks);
   };
 
-  static findUserTasks = async (filter: Filter<MongoTask>) =>
-    await MongoDBAdapter.tasksCollection.find(filter).toArray();
+  static findUserTasks = async (
+    filter: Filter<MongoTask>
+  ): Promise<MongoTask[]> => await this.tasksCollection.find(filter).toArray();
+
+  static findTaskById = async (taskId: string): Promise<MongoTask | null> =>
+    await this.tasksCollection.findOne({ _id: new ObjectId(taskId) });
+
+  static deleteUserTask = async (taskId: string) => {
+    await this.tasksCollection.deleteOne({
+      _id: new ObjectId(taskId),
+    });
+  };
+
+  static adjustTasksIndexes = async (
+    userId: string,
+    filter: { swimlane: SwimlaneId; status: StatusId }
+  ) => {
+    const tasks = await this.findUserTasks({
+      ...filter,
+      userId: { $eq: userId },
+    });
+
+    const sortedTasks = tasks.sort((a, b) => a.index - b.index);
+
+    const [_id, ...updatedTasks] = sortedTasks.map((task, index) => ({
+      ...task,
+      index,
+      id: task._id.toString(),
+    }));
+
+    await this.updateUserTasks(updatedTasks);
+  };
 }
 
 MongoDBAdapter.connect();

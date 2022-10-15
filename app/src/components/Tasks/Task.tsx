@@ -2,9 +2,13 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Modal from '~/components/Modal';
-import { useUpdateTasksMutation } from '~/components/Api/apiSlice';
-import { renameTask } from './redux/tasksSlice';
+import {
+  useUpdateTasksMutation,
+  useDeleteTaskMutation,
+} from '~/components/Api/apiSlice';
+import { deleteTask, renameTask } from './redux/tasksSlice';
 import { StatusId } from '/types';
+import DeleteTaskButton from '~/components/DeleteTaskButton';
 
 const StyledTask = styled.div<{ isDragging: boolean; lineThrough: boolean }>`
   background-color: white;
@@ -45,9 +49,13 @@ const Input = styled.input`
   font-size: inherit;
   color: inherit;
   background-color: transparent;
+  outline: none;
+  transition: 200ms ease-in-out;
 
   :focus {
     background-color: white;
+    box-shadow: inset 0 -1px 2px #3d6d8a;
+    transition: 0ms;
   }
 `;
 
@@ -62,6 +70,7 @@ const Task = ({ label, isDragging, id, statusId }: Props) => {
   const [inputValue, setInputValue] = useState(label);
   const dispatch = useDispatch();
   const [updateTasksMutation] = useUpdateTasksMutation();
+  const [deleteTaskMutation] = useDeleteTaskMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onClickHandler = () => setIsModalOpen(true);
@@ -79,6 +88,12 @@ const Task = ({ label, isDragging, id, statusId }: Props) => {
     dispatch(renameTask({ id, label: inputValue }));
     updateTasksMutation([{ id, label: inputValue }]);
     setIsModalOpen(false);
+  };
+
+  const onRemoveHandler = () => {
+    console.log('Removing task');
+    dispatch(deleteTask({ id }));
+    deleteTaskMutation(id);
   };
 
   return (
@@ -99,6 +114,7 @@ const Task = ({ label, isDragging, id, statusId }: Props) => {
             onChange={onChangeHandler}
           />
         </Form>
+        <DeleteTaskButton onClick={onRemoveHandler} />
       </Modal>
     </>
   );

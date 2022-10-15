@@ -1,7 +1,12 @@
 import { Router, Response } from 'express';
 import { checkJwt } from '~/middlewares';
 import { RequestWithAuth, RequestWithUserTasks } from '~/types';
-import { getTasks, createUserTask, updateUserTasks } from './service';
+import {
+  getTasks,
+  createUserTask,
+  updateUserTasks,
+  deleteUserTask,
+} from './service';
 
 const router = Router();
 router.use(checkJwt);
@@ -40,6 +45,17 @@ router.patch('/', async (req: RequestWithUserTasks, res: Response) => {
 
   try {
     await updateUserTasks(userId, tasks);
+    res.send();
+  } catch (error) {
+    res.status(500).send();
+  }
+});
+
+router.delete('/:id', async (req: RequestWithAuth, res: Response) => {
+  const taskId = req.params.id;
+
+  try {
+    await deleteUserTask(taskId);
     res.send();
   } catch (error) {
     res.status(500).send();

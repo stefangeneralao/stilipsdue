@@ -4,7 +4,7 @@ import { groupBySwimlaneAndStatus } from '~/utils';
 import { Task } from '/types';
 import { sec } from './security';
 
-const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 export const apiSlice = createApi({
   reducerPath: 'api',
@@ -42,6 +42,13 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['Tasks'],
     }),
+    deleteTask: builder.mutation({
+      query: (id: string) => ({
+        url: `/tasks/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Tasks'],
+    }),
   }),
 });
 
@@ -49,4 +56,5 @@ export const {
   useGetTasksQuery,
   useAddNewTaskMutation,
   useUpdateTasksMutation,
+  useDeleteTaskMutation,
 } = apiSlice;
