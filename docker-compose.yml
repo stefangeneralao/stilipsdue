@@ -4,14 +4,14 @@ services:
     build: server
     platform: linux/amd64
     image: docker.stefangeneralao.com/stilipsdue-backend
-    env_file:
-      - server/.env
     ports:
       - 3001:3001
   stilipsdue-frontend:
     build:
       context: .
       dockerfile: app/Dockerfile
+      args:
+        - VITE_API_URL=https://stefangeneralao.com/stilipsdue-api
     platform: linux/amd64
     image: docker.stefangeneralao.com/stilipsdue-frontend
     ports:
