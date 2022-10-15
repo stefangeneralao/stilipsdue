@@ -1,26 +1,18 @@
 # Dependencies
 FROM node:16-alpine AS dependencies
-WORKDIR /app
-COPY package.json yarn.lock ./
+WORKDIR /dependencies
+COPY ./server/package.json ./server/yarn.lock ./
 RUN yarn install --frozen-lockfile --network-timeout 1000000
 
 # Builder
 FROM node:16-alpine AS builder
-WORKDIR /app
-
-COPY src ./src
-COPY package.json yarn.lock tsconfig.json ./
-COPY --from=dependencies /app/node_modules ./node_modules
-
-RUN yarn build
+WORKDIR /builder
+COPY ./server ./server/
+COPY --from=dependencies /dependencies/node_modules ./server/node_modules
+RUN yarn --cwd server build
 
 # Runner
 FROM node:16-alpine AS runner
-WORKDIR /app
-
-COPY --from=builder /app/dist ./
-
-EXPOSE 3001
-ENV PORT 3001
-
+WORKDIR /runner
+COPY --from=builder /builder/server/dist ./
 CMD ["node", "."]
