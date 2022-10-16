@@ -139,15 +139,16 @@ class MongoDBAdapter {
       ...filter,
       userId: { $eq: userId },
     });
+    if (tasks.length === 0) {
+      return;
+    }
 
     const sortedTasks = tasks.sort((a, b) => a.index - b.index);
-
-    const [_id, ...updatedTasks] = sortedTasks.map((task, index) => ({
+    const updatedTasks = sortedTasks.map(({ _id, ...task }, index) => ({
       ...task,
       index,
-      id: task._id.toString(),
+      id: _id.toString(),
     }));
-
     await this.updateUserTasks(updatedTasks);
   };
 }
