@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import StrictModeDroppable from '~/components/StrictModeDroppable';
-import { columns } from '~/constants';
 import Task from '~/components/Tasks/Task';
 import NewTaskField from '~/components/NewTaskField';
 import { StatusId, SwimlaneId, Task as TaskType } from '/types';
 import { Draggable } from 'react-beautiful-dnd';
+import { getFriendlyName } from '~/utils';
 
 const StyledStatusColumn = styled.div`
   display: grid;
@@ -45,7 +45,7 @@ const StatusColumn = ({ status, swimlaneId, tasks }: Props) => (
   <StrictModeDroppable droppableId={`swimlane:${swimlaneId}-status:${status}`}>
     {(provided, snapshot) => (
       <StyledStatusColumn>
-        <ColumnTitle>{columns[status].friendlyName}</ColumnTitle>
+        <ColumnTitle>{getFriendlyName(status)}</ColumnTitle>
 
         <TaskList
           isDraggingOver={snapshot.isDraggingOver}

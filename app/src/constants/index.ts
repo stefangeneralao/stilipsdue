@@ -1,18 +1,6 @@
-export const columns = {
-  todo: {
-    friendlyName: 'Do',
-  },
-  doASAP: {
-    friendlyName: 'Do ASAP',
-  },
-  done: {
-    friendlyName: 'Done',
-  },
-} as const;
+import { StatusId, SwimlaneId } from '/types';
 
-export const columnKeys = ['todo', 'doASAP', 'done'] as const;
-
-export const friendlyNameMap = {
+export const friendlyNameMap: Record<SwimlaneId | StatusId, string> = {
   todo: 'Todo',
   doASAP: 'Do ASAP',
   done: 'Done',

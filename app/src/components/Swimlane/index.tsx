@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { SwimlaneId } from '/types';
-import { columnKeys } from '~/constants';
+import { SwimlaneId, statusIds } from '/types';
 import StatusColumn from '~/components/StatusColumn';
 import { Status } from '~/components/Tasks/redux/interfaces';
 import { StatusId } from '/types';
@@ -40,12 +39,12 @@ const Swimlane = ({ title, statuses, id }: Props) => {
       <SwimlaneTitle>{title}</SwimlaneTitle>
       <ScrollBox>
         <StatusColumns>
-          {columnKeys.map((columnKey) => (
+          {statusIds.map((statusId) => (
             <StatusColumn
-              key={columnKey}
-              status={columnKey}
+              key={statusId}
+              status={statusId}
               swimlaneId={id}
-              tasks={statuses[columnKey].tasks}
+              tasks={statuses[statusId].tasks}
             />
           ))}
         </StatusColumns>
