@@ -91,7 +91,6 @@ const Task = ({ label, isDragging, id, statusId }: Props) => {
   };
 
   const onRemoveHandler = () => {
-    console.log('Removing task');
     dispatch(deleteTask({ id }));
     deleteTaskMutation(id);
   };

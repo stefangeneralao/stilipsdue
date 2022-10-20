@@ -12,7 +12,7 @@ router.get('/', checkJwt, async (req: RequestWithAuth, res: Response) => {
     const user = await getUser(userId);
     res.send(user);
   } catch (e) {
-    console.log(e);
+    console.error(e);
     res.status(500).send();
   }
 });

@@ -1,7 +1,7 @@
 import { Filter, MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 import { MongoTask } from '~/types';
-import { StatusId, SwimlaneId, TaskWithUserId } from '/types';
+import { StatusId, SwimlaneId, Task, TaskWithUserId } from '/types';
 dotenv.config();
 
 const {
@@ -34,24 +34,14 @@ class MongoDBAdapter {
 
   static connect = () => this.client.connect();
 
-  static getUserTasks = async (userId: string) => {
-    const mongoTasks = await this.tasksCollection
-      .find({ userId: { $eq: userId } })
-      .toArray();
+  static getUserTasks = async (userId: string): Promise<MongoTask[]> =>
+    await this.tasksCollection.find({ userId: { $eq: userId } }).toArray();
 
-    return mongoTasks.map((mongoTask) => {
-      const { _id, ...rest } = mongoTask;
-
-      return {
-        id: _id,
-        ...rest,
-      };
-    });
-  };
-
-  static updateUserTasks = async (tasks: TaskWithUserId[]) => {
+  static updateUserTasks = async (
+    tasks: TaskWithUserId[]
+  ): Promise<MongoTask[]> => {
     const mongoDBBulk = this.tasksCollection.initializeUnorderedBulkOp();
-    tasks.forEach((task) => {
+    const updatedTasks = tasks.map((task) => {
       const { id, ...rest } = task;
 
       const newDocument = {
@@ -62,30 +52,19 @@ class MongoDBAdapter {
       mongoDBBulk
         .find({ _id: new ObjectId(task.id) })
         .updateOne({ $set: { ...newDocument } });
+
+      return newDocument;
     });
     await mongoDBBulk.execute();
+    return updatedTasks;
   };
 
-  static createUserTasks = async (tasks: TaskWithUserId[]) => {
-    const mongoTasks = tasks.map((task) => {
-      const { id, ...rest } = task;
-      return rest;
-    });
-
-    const { insertedIds } = await this.tasksCollection.insertMany(
-      mongoTasks.map((task) => Object.assign({}, task))
-    );
-
-    return mongoTasks.map((task, index) => ({
-      ...task,
-      id: insertedIds[index].toString(),
-    }));
+  static createUserTask = async (task: TaskWithUserId): Promise<void> => {
+    const { id, ...mongoTask } = task;
+    await this.tasksCollection.insertOne(mongoTask);
   };
 
-  static createUserTask = async (task: any) =>
-    await this.tasksCollection.insertOne(task);
-
-  static deleteUserTasks = async (filter: Filter<MongoTask>) => {
+  static deleteUserTasks = async (filter: Filter<MongoTask>): Promise<void> => {
     await this.tasksCollection.deleteMany(filter);
   };
 
@@ -93,29 +72,10 @@ class MongoDBAdapter {
     swimlane: SwimlaneId,
     toStatus: StatusId
   ) => {
-    const tasks = await this.findUserTasks({
-      swimlane: { $eq: swimlane },
-    });
-
-    const tasksGroupedByUser = tasks.reduce((acc, task) => {
-      if (!acc[task.userId]) {
-        acc[task.userId] = [];
-      }
-      acc[task.userId].push(task);
-      return acc;
-    }, {} as { [userId: string]: MongoTask[] });
-
-    const updatedDailyTasks = Object.values(tasksGroupedByUser).flatMap(
-      (tasks) =>
-        tasks.map(({ _id, ...rest }, index) => ({
-          ...rest,
-          index,
-          status: toStatus,
-          id: _id.toString(),
-        }))
+    await this.tasksCollection.updateMany(
+      { swimlane },
+      { $set: { status: toStatus } }
     );
-
-    await this.updateUserTasks(updatedDailyTasks);
   };
 
   static findUserTasks = async (
@@ -125,10 +85,16 @@ class MongoDBAdapter {
   static findTaskById = async (taskId: string): Promise<MongoTask | null> =>
     await this.tasksCollection.findOne({ _id: new ObjectId(taskId) });
 
-  static deleteUserTask = async (taskId: string) => {
-    await this.tasksCollection.deleteOne({
-      _id: new ObjectId(taskId),
+  static deleteUserTask = async (taskId: string): Promise<MongoTask> => {
+    const _id = new ObjectId(taskId);
+    const deleteResult = await this.tasksCollection.findOneAndDelete({
+      _id,
     });
+
+    if (!deleteResult.value) {
+      throw new Error(`Task with id ${taskId} not found.`);
+    }
+    return deleteResult.value;
   };
 
   static adjustTasksIndexes = async (
