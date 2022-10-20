@@ -1,5 +1,5 @@
 import { TasksState } from '~/components/Tasks/redux/interfaces';
-import { Task, StatusId, swimlaneIds, SwimlaneId } from '/types';
+import { Task, StatusId, SwimlaneId } from '/types';
 import { transposeMatrix } from '.';
 import { friendlyNameMap } from '~/constants';
 
@@ -69,19 +69,16 @@ export const groupByStatus = (
   }, initialValue);
 
   const statusEntries = Object.entries(groupedByStatus).map(
-    ([statusId, statusValue]) => {
-      return [
-        statusId,
-        {
-          ...statusValue,
-          tasks: statusValue.tasks.sort(compareIndex),
-        },
-      ];
-    }
+    ([statusId, statusValue]) => [
+      statusId,
+      {
+        ...statusValue,
+        tasks: [...statusValue.tasks].sort(compareIndex),
+      },
+    ]
   );
 
   const groupedAndSorted = Object.fromEntries(statusEntries);
-
   return groupedAndSorted;
 };
 
@@ -125,8 +122,8 @@ export const diffTasks = (
   previousTasks: Task[],
   currentTasks: Task[]
 ): Task[] => {
-  const sortedPreviousTasks = previousTasks.sort(compareTaskByKey('id'));
-  const sortedCurrentTasks = currentTasks.sort(compareTaskByKey('id'));
+  const sortedPreviousTasks = { ...previousTasks }.sort(compareTaskByKey('id'));
+  const sortedCurrentTasks = { ...currentTasks }.sort(compareTaskByKey('id'));
   const comparisonPairs = transposeMatrix([
     sortedPreviousTasks,
     sortedCurrentTasks,

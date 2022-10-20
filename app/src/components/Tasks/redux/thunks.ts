@@ -11,7 +11,7 @@ export const reorderTasks = createAsyncThunk<
   { dropResult: DropResult },
   { state: RootState }
 >('tasks/reorderTasks', async (payload, thunkAPI) => {
-  const state = thunkAPI.getState() as RootState;
+  const state = thunkAPI.getState();
   const {
     tasks,
     tasks: { swimlanes },

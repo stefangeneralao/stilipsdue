@@ -1,7 +1,7 @@
 import { Filter, MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 import { MongoTask } from '~/types';
-import { StatusId, SwimlaneId, Task, TaskWithUserId } from '/types';
+import { StatusId, SwimlaneId, TaskWithUserId } from '/types';
 dotenv.config();
 
 const {
@@ -109,7 +109,7 @@ class MongoDBAdapter {
       return;
     }
 
-    const sortedTasks = tasks.sort((a, b) => a.index - b.index);
+    const sortedTasks = [...tasks].sort((a, b) => a.index - b.index);
     const updatedTasks = sortedTasks.map(({ _id, ...task }, index) => ({
       ...task,
       index,
