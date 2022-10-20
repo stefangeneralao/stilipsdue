@@ -1,4 +1,4 @@
-name: CI
+name: Push Docker images
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-backend:
+  push_backend_docker_image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,7 +28,7 @@ jobs:
           tags: ${{ secrets.DOCKER_REGISTRY_URL }}/stilipsdue-backend
           platforms: linux/amd64
 
-  deploy-frontend:
+  push_frontend_docker_image:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
