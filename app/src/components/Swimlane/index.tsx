@@ -1,8 +1,7 @@
 import styled from 'styled-components';
-import { SwimlaneId, statusIds } from '/types';
+import { SwimlaneId, statusIds, StatusId } from '/types';
 import StatusColumn from '~/components/StatusColumn';
 import { Status } from '~/components/Tasks/redux/interfaces';
-import { StatusId } from '/types';
 
 const StyledSwimlane = styled.div`
   min-height: 300px;

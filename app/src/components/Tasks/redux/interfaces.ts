@@ -1,4 +1,3 @@
-import Swimlane from '~/components/Swimlane';
 import { StatusId, SwimlaneId, Task } from '/types';
 
 export interface Status {

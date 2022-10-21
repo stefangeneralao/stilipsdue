@@ -1,6 +1,6 @@
 import { Router, Response, Request } from 'express';
 import { checkJwt } from '~/middlewares';
-import { AuthType, RequestWithAuth, RequestWithUserTasks } from '~/types';
+import { AuthType, RequestWithAuth } from '~/types';
 import {
   getTasks,
   createUserTask,
