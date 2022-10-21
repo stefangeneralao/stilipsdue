@@ -5,6 +5,16 @@ import helmet from 'helmet';
 import controllers from '~/controllers';
 import { initJobs } from '~/cronjobs';
 
+const corsOrigin = (() => {
+  if (!process.env.CORS_ORIGIN) {
+    console.log(
+      'CORS_ORIGIN is not defined in .env, falling back to http://localhost:3000.'
+    );
+    return 'http://localhost:3000';
+  }
+  return process.env.CORS_ORIGIN;
+})();
+
 initJobs();
 
 const app = express();
@@ -13,7 +23,7 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: corsOrigin,
   })
 );
 app.use(controllers);
