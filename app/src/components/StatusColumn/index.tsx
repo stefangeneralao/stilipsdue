@@ -32,7 +32,7 @@ const TaskContainer = styled.div`
 `;
 
 const NewTaskFieldContainer = styled.div`
-  height: 30px;
+  height: 48px;
 `;
 
 interface Props {
