@@ -10,21 +10,28 @@ const {
   MONGO_CLUSTER: mongoCluster,
   MONGO_DATABASE_NAME: mongoDatabaseName,
   MONGO_COLLECTION_NAME: mongoCollectionName,
+  DB_CONNECTION: dbConnection,
 } = process.env;
 
-if (
-  !mongoUser ||
-  !mongoPassword ||
-  !mongoCluster ||
-  !mongoDatabaseName ||
-  !mongoCollectionName
-) {
-  throw new Error(
-    '.env must contain MONGO_USER, MONGO_PASSWORD, MONGO_CLUSTER, MONGO_DATABASE_NAME and MONGO_COLLECTION_NAME.'
-  );
-}
+const uri = (() => {
+  if (dbConnection === 'local') {
+    return 'mongodb://127.0.0.1:27017';
+  }
 
-const uri = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoCluster}/?retryWrites=true&w=majority`;
+  if (
+    mongoUser &&
+    mongoPassword &&
+    mongoCluster &&
+    mongoDatabaseName &&
+    mongoCollectionName
+  ) {
+    return `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoCluster}/?retryWrites=true&w=majority`;
+  }
+
+  throw new Error(
+    '.env must contain MONGO_USER, MONGO_PASSWORD, MONGO_CLUSTER, MONGO_DATABASE_NAME and MONGO_COLLECTION_NAME or DB_CONNECTION=local.'
+  );
+})();
 
 class MongoDBAdapter {
   private static readonly client = new MongoClient(uri);
