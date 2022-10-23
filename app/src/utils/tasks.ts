@@ -122,8 +122,8 @@ export const diffTasks = (
   previousTasks: Task[],
   currentTasks: Task[]
 ): Task[] => {
-  const sortedPreviousTasks = { ...previousTasks }.sort(compareTaskByKey('id'));
-  const sortedCurrentTasks = { ...currentTasks }.sort(compareTaskByKey('id'));
+  const sortedPreviousTasks = [...previousTasks].sort(compareTaskByKey('id'));
+  const sortedCurrentTasks = [...currentTasks].sort(compareTaskByKey('id'));
   const comparisonPairs = transposeMatrix([
     sortedPreviousTasks,
     sortedCurrentTasks,
