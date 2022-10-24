@@ -2,9 +2,8 @@ name: Push Docker images
 
 on:
   push:
-    branches: ["*"]
-  pull_request:
-    branches: ["master"]
+    branches:
+      - master
 
   workflow_dispatch:
 
