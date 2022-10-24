@@ -1,4 +1,4 @@
-name: Push Docker images
+name: Deploy Docker images
 
 on:
   push:
@@ -16,7 +16,8 @@ jobs:
   eslint:
     uses: ./.github/workflows/eslint.yml
 
-  push_backend_docker_image:
+  backend:
+    name: Build and push backend Docker image
     runs-on: ubuntu-latest
     needs: [sonarcloud, eslint]
     steps:
@@ -36,7 +37,8 @@ jobs:
           tags: ${{ secrets.DOCKER_REGISTRY_URL }}/stilipsdue-backend
           platforms: linux/amd64
 
-  push_frontend_docker_image:
+  frontend:
+    name: Build and push frontend Docker image
     runs-on: ubuntu-latest
     needs: [sonarcloud, eslint]
     steps:
