@@ -25,7 +25,7 @@ const Profile = () => {
       <AuthenticationButton>
         <Img src={logo} />
       </AuthenticationButton>
-      {user && isAuthenticated && <H1>Let's go, {user.name}!</H1>}
+      {user && isAuthenticated && <H1>{`Let's go, ${user.name}!`}</H1>}
     </StyledProfile>
   );
 };

@@ -67,7 +67,7 @@ class MongoDBAdapter {
   };
 
   static createUserTask = async (task: TaskWithUserId): Promise<void> => {
-    const { id, ...mongoTask } = task;
+    const { id: _, ...mongoTask } = task;
     await this.tasksCollection.insertOne(mongoTask);
   };
 
