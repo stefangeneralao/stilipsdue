@@ -27,7 +27,11 @@
     "@types/react-modal": "^3.13.1",
     "@types/styled-components": "^5.1.26",
     "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
     "@vitejs/plugin-react": "^2.0.1",
+    "eslint": "^8.26.0",
+    "eslint-plugin-react": "^7.31.10",
     "typescript": "^4.6.4",
     "vite": "^3.0.7"
   }
