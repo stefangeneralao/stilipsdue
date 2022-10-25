@@ -32,3 +32,17 @@ const port = 3001;
 app.listen(port, () => {
   console.log(`Listening to port ${3001}.`);
 });
+
+// example of bad code smell
+const badFunction = () => {
+  const badVariable = 1;
+
+  if (badVariable === 1) {
+    console.log('badVariable is 1');
+    return 0;
+  }
+
+  return badVariable;
+};
+
+badFunction();
