@@ -60,3 +60,7 @@ jobs:
           platforms: linux/amd64
           build-args: |
             VITE_API_URL=${{ secrets.VITE_API_URL }}
+            VITE_AUTH0_DOMAIN=${{ secrets.VITE_AUTH0_DOMAIN }}
+            VITE_AUTH0_AUDIENCE=${{ secrets.VITE_AUTH0_AUDIENCE }}
+            VITE_AUTH0_SCOPE=${{ secrets.VITE_AUTH0_SCOPE }}
+            VITE_AUTH0_CLIENTID=${{ secrets.VITE_AUTH0_CLIENTID }}
