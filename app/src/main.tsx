@@ -11,10 +11,11 @@ import './index.css';
     <React.StrictMode>
       <Provider store={store}>
         <Auth0Provider
-          domain="stefangeneralao.eu.auth0.com"
-          clientId="iY4ozQWd4RMbje0JO7JnEvd9SyE9f5P2"
+          domain={import.meta.env.VITE_AUTH0_DOMAIN}
+          clientId={import.meta.env.VITE_AUTH0_CLIENTID}
           redirectUri={`${window.location.origin}${import.meta.env.BASE_URL}`}
-          audience="https://api.test"
+          audience={import.meta.env.VITE_AUTH0_AUDIENCE}
+          scope={import.meta.env.VITE_AUTH0_SCOPE}
         >
           <App />
         </Auth0Provider>
