@@ -45,8 +45,8 @@ class MongoDBAdapter {
     await this.tasksCollection.find({ userId: { $eq: userId } }).toArray();
 
   static updateUserTasks = async (
-    tasks: TaskWithUserId[]
-  ): Promise<MongoTask[]> => {
+    tasks: Partial<TaskWithUserId>[]
+  ): Promise<Partial<MongoTask>[]> => {
     const mongoDBBulk = this.tasksCollection.initializeUnorderedBulkOp();
     const updatedTasks = tasks.map((task) => {
       const { id, ...rest } = task;
@@ -62,7 +62,8 @@ class MongoDBAdapter {
 
       return newDocument;
     });
-    await mongoDBBulk.execute();
+    const result = await mongoDBBulk.execute();
+    console.log(result);
     return updatedTasks;
   };
 

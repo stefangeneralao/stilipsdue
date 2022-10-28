@@ -35,7 +35,6 @@ export const updateUserTasks = async (
   tasks: Partial<Task>[]
 ) => {
   const mongoTasks = tasks.map((task) => ({
-    ...defaultTask,
     ...task,
     userId,
   }));
