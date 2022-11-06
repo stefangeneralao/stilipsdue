@@ -22,6 +22,7 @@ export const addTask = (
       label,
       status: statusId,
       swimlane: swimlaneId,
+      description: '',
     },
   ];
 };

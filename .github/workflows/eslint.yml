@@ -7,8 +7,8 @@ on:
   workflow_call:
 
 jobs:
-  eslint-frontend:
-    name: ESLint frontend
+  frontend:
+    name: Frontend
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,8 +35,8 @@ jobs:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
 
-  eslint-backend:
-    name: ESLint backend
+  backend:
+    name: Backend
     runs-on: ubuntu-latest
     permissions:
       contents: read
