@@ -1,4 +1,4 @@
-name: SonarCloud Analysis
+name: SonarCloud
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -11,14 +11,13 @@ on:
 
 jobs:
   sonarcloud:
-    name: SonarCloud Analysis
+    name: Analysis
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+      - uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
