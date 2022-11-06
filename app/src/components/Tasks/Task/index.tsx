@@ -6,9 +6,11 @@ import {
   useUpdateTasksMutation,
   useDeleteTaskMutation,
 } from '~/components/Api/apiSlice';
-import { deleteTask, renameTask } from './redux/tasksSlice';
+import { deleteTask, renameTask } from '../redux/tasksSlice';
 import { StatusId } from '/types';
 import DeleteTaskButton from '~/components/DeleteTaskButton';
+import Description from './Description';
+import LabelInput from './Label';
 
 const StyledTask = styled.div<{ isDragging: boolean; lineThrough: boolean }>`
   background-color: white;
@@ -32,42 +34,23 @@ const Label = styled.p`
   line-height: normal;
 `;
 
-const Form = styled.form`
-  padding: 0;
-  margin: 0;
-  border: 0;
-  width: 100%;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  border: 0;
-  margin: 0;
-  padding: 12px 15px;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-  background-color: transparent;
-  outline: none;
-  transition: 200ms ease-in-out;
-
-  :focus {
-    background-color: white;
-    box-shadow: inset 0 -1px 2px #3d6d8a;
-    transition: 0ms;
-  }
-`;
-
 interface Props {
   id: string;
   label: string;
+  description: string;
   isDragging: boolean;
   statusId: StatusId;
 }
 
-const Task = ({ label, isDragging, id, statusId }: Props) => {
-  const [inputValue, setInputValue] = useState(label);
+const Task = ({
+  label: initialLabel,
+  description: initialDescription,
+  isDragging,
+  id,
+  statusId,
+}: Props) => {
+  const [label, setLabel] = useState(initialLabel);
+  const [description, setDescription] = useState(initialDescription);
   const dispatch = useDispatch();
   const [updateTasksMutation] = useUpdateTasksMutation();
   const [deleteTaskMutation] = useDeleteTaskMutation();
@@ -75,19 +58,40 @@ const Task = ({ label, isDragging, id, statusId }: Props) => {
 
   const onClickHandler = () => setIsModalOpen(true);
 
-  const onBlurHandler = () => {
-    dispatch(renameTask({ id, label: inputValue }));
-    updateTasksMutation([{ id, label: inputValue }]);
+  const onLabelChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setLabel(event.currentTarget.value);
+
+  const onLabelSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (label === initialLabel) return;
+
+    dispatch(renameTask({ id, label }));
+    updateTasksMutation([{ id, label }]);
   };
 
-  const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) =>
-    setInputValue(event.currentTarget.value);
+  const onLabelBlur = () => {
+    if (label === initialLabel) return;
 
-  const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    dispatch(renameTask({ id, label }));
+    updateTasksMutation([{ id, label }]);
+  };
+
+  const onDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) =>
+    setDescription(event.currentTarget.value);
+
+  const onDescriptionSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    dispatch(renameTask({ id, label: inputValue }));
-    updateTasksMutation([{ id, label: inputValue }]);
-    setIsModalOpen(false);
+
+    if (description === initialDescription) return;
+
+    updateTasksMutation([{ id, description }]);
+  };
+
+  const onDescriptionBlur = () => {
+    if (description === initialDescription) return;
+
+    updateTasksMutation([{ id, description }]);
   };
 
   const onRemoveHandler = () => {
@@ -102,17 +106,22 @@ const Task = ({ label, isDragging, id, statusId }: Props) => {
         onClick={onClickHandler}
         lineThrough={statusId === 'done'}
       >
-        <Label>{inputValue}</Label>
+        <Label>{label}</Label>
       </StyledTask>
 
       <Modal isOpen={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
-        <Form onSubmit={onSubmitHandler}>
-          <Input
-            onBlur={onBlurHandler}
-            value={inputValue}
-            onChange={onChangeHandler}
-          />
-        </Form>
+        <LabelInput
+          value={label}
+          onChange={onLabelChange}
+          onSubmit={onLabelSubmit}
+          onBlur={onLabelBlur}
+        />
+        <Description
+          value={description}
+          onChange={onDescriptionChange}
+          onSubmit={onDescriptionSubmit}
+          onBlur={onDescriptionBlur}
+        />
         <DeleteTaskButton onClick={onRemoveHandler} />
       </Modal>
     </>
