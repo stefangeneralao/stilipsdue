@@ -20,9 +20,9 @@ jobs:
     uses: ./.github/workflows/tsc.yml
 
   backend:
-    name: Build and push backend Docker image
+    name: Backend
     runs-on: ubuntu-latest
-    needs: [sonarcloud, eslint]
+    needs: [sonarcloud, eslint, tsc]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -41,9 +41,9 @@ jobs:
           platforms: linux/amd64
 
   frontend:
-    name: Build and push frontend Docker image
+    name: Frontend
     runs-on: ubuntu-latest
-    needs: [sonarcloud, eslint]
+    needs: [sonarcloud, eslint, tsc]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
