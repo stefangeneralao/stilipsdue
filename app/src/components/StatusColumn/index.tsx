@@ -62,6 +62,7 @@ const StatusColumn = ({ status, swimlaneId, tasks }: Props) => (
                 >
                   <Task
                     label={task.label}
+                    description={task.description}
                     isDragging={snapshot.isDragging}
                     id={task.id}
                     statusId={status}

@@ -15,6 +15,7 @@ export interface Task {
   status: StatusId;
   swimlane: SwimlaneId;
   index: number;
+  description: string;
 }
 
 export interface TaskWithUserId extends Task {
