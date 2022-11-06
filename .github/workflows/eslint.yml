@@ -8,7 +8,6 @@ on:
 
 jobs:
   frontend:
-    name: Frontend
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -18,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install ESLint
+      - name: Install dependencies
         run: |
           npm install eslint@8.10.0
           npm install @microsoft/eslint-formatter-sarif@2.1.7
@@ -36,7 +35,6 @@ jobs:
           wait-for-processing: true
 
   backend:
-    name: Backend
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -46,7 +44,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install ESLint
+      - name: Install dependencies
         run: |
           npm install eslint@8.10.0
           npm install @microsoft/eslint-formatter-sarif@2.1.7
