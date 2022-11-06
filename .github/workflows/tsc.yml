@@ -24,3 +24,21 @@ jobs:
 
       - name: Run TSC
         run: npx tsc --project app/tsconfig.json --noEmit --pretty
+
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install TSC
+        run: |
+          yarn add tsc
+          yarn add typescript
+
+      - name: Install dependencies
+        run: yarn --cwd server
+
+      - name: Run TSC
+        run: npx tsc --project server/tsconfig.json --noEmit --pretty
