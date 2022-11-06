@@ -8,6 +8,7 @@ export const tasks: Task[] = [
     status: 'done',
     swimlane: 'dailies',
     index: 0,
+    description: '',
   },
   {
     id: new ObjectId().toString(),
@@ -15,6 +16,7 @@ export const tasks: Task[] = [
     status: 'doASAP',
     swimlane: 'dailies',
     index: 0,
+    description: '',
   },
   {
     id: new ObjectId().toString(),
@@ -22,6 +24,7 @@ export const tasks: Task[] = [
     status: 'doASAP',
     swimlane: 'dailies',
     index: 1,
+    description: '',
   },
   {
     id: new ObjectId().toString(),
@@ -29,6 +32,7 @@ export const tasks: Task[] = [
     status: 'todo',
     swimlane: 'dailies',
     index: 2,
+    description: '',
   },
   {
     id: new ObjectId().toString(),
@@ -36,6 +40,7 @@ export const tasks: Task[] = [
     status: 'done',
     swimlane: 'weeklies',
     index: 0,
+    description: '',
   },
   {
     id: new ObjectId().toString(),
@@ -43,6 +48,7 @@ export const tasks: Task[] = [
     status: 'done',
     swimlane: 'weeklies',
     index: 1,
+    description: '',
   },
   {
     id: new ObjectId().toString(),
@@ -50,6 +56,7 @@ export const tasks: Task[] = [
     status: 'todo',
     swimlane: 'monthlies',
     index: 0,
+    description: '',
   },
   {
     id: new ObjectId().toString(),
@@ -57,6 +64,7 @@ export const tasks: Task[] = [
     status: 'todo',
     swimlane: 'monthlies',
     index: 1,
+    description: '',
   },
   {
     id: new ObjectId().toString(),
@@ -64,5 +72,6 @@ export const tasks: Task[] = [
     status: 'todo',
     swimlane: 'singles',
     index: 0,
+    description: '',
   },
 ];

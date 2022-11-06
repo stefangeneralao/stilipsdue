@@ -7,4 +7,5 @@ export const defaultTask: Task = {
   label: '',
   status: null,
   swimlane: null,
+  description: '',
 };
