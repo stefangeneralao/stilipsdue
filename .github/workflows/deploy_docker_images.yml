@@ -16,6 +16,9 @@ jobs:
   eslint:
     uses: ./.github/workflows/eslint.yml
 
+  tsc:
+    uses: ./.github/workflows/tsc.yml
+
   backend:
     name: Build and push backend Docker image
     runs-on: ubuntu-latest

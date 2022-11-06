@@ -1,0 +1,26 @@
+name: TSC
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+  workflow_call:
+
+jobs:
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install TSC
+        run: |
+          yarn add tsc
+          yarn add typescript
+
+      - name: Install dependencies
+        run: yarn --cwd app
+
+      - name: Run TSC
+        run: npx tsc --project app/tsconfig.json --noEmit --pretty
