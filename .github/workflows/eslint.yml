@@ -8,6 +8,7 @@ on:
 
 jobs:
   frontend:
+    name: Frontend
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,6 +36,7 @@ jobs:
           wait-for-processing: true
 
   backend:
+    name: Backend
     runs-on: ubuntu-latest
     permissions:
       contents: read

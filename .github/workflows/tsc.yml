@@ -8,6 +8,7 @@ on:
 
 jobs:
   frontend:
+    name: Frontend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -23,6 +24,7 @@ jobs:
         run: npx tsc --project app/tsconfig.json --noEmit --pretty
 
   backend:
+    name: Backend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
