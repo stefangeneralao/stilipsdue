@@ -1,17 +1,11 @@
 import { defaultTask } from '~/constants';
 import MongoDBAdapter from '~/db/MongoDBAdapter';
-import { Task } from '/types';
+import { mongoTaskToTaskWithUserId } from '~/utils';
+import { PartialTask, PartialTaskWithUserId, Task } from '/types';
 
 export const getTasks = async (userId: string): Promise<Task[]> => {
   const mongoTasks = await MongoDBAdapter.getUserTasks(userId);
-  return mongoTasks.map((mongoTask) => {
-    const { _id, ...rest } = mongoTask;
-
-    return {
-      id: _id.toString(),
-      ...rest,
-    };
-  });
+  return mongoTasks.map(mongoTaskToTaskWithUserId);
 };
 
 export const createUserTask = async (
@@ -24,7 +18,8 @@ export const createUserTask = async (
     userId,
   };
   await MongoDBAdapter.createUserTask(inputTask);
-  await MongoDBAdapter.adjustTasksIndexes(userId, {
+  await MongoDBAdapter.adjustTasksIndexes({
+    userId,
     status: inputTask.status,
     swimlane: inputTask.swimlane,
   });
@@ -32,19 +27,20 @@ export const createUserTask = async (
 
 export const updateUserTasks = async (
   userId: string,
-  tasks: Partial<Task>[]
-) => {
+  tasks: PartialTask[]
+): Promise<PartialTaskWithUserId[]> => {
   const mongoTasks = tasks.map((task) => ({
     ...task,
     userId,
   }));
 
-  return await MongoDBAdapter.updateUserTasks(mongoTasks);
+  const updatedUserTasks = await MongoDBAdapter.updateUserTasks(mongoTasks);
+  return updatedUserTasks.map(mongoTaskToTaskWithUserId);
 };
 
 export const deleteUserTask = async (taskId: string) => {
   const { userId, status, swimlane } = await MongoDBAdapter.deleteUserTask(
     taskId
   );
-  await MongoDBAdapter.adjustTasksIndexes(userId, { status, swimlane });
+  await MongoDBAdapter.adjustTasksIndexes({ userId, status, swimlane });
 };

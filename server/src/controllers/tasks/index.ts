@@ -7,7 +7,7 @@ import {
   updateUserTasks,
   deleteUserTask,
 } from './service';
-import { Task } from '/types';
+import { PartialTask, Task } from '/types';
 
 const router = Router();
 router.use(checkJwt);
@@ -39,7 +39,7 @@ router.post('/', async (req: RequestWithAuth, res: Response) => {
 router.patch(
   '/',
   async (
-    req: Request<unknown, unknown, Partial<Task>[]> & AuthType,
+    req: Request<unknown, unknown, PartialTask[]> & AuthType,
     res: Response
   ) => {
     const userId = req.auth.sub;

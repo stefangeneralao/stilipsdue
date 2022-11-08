@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { TasksState } from '~/components/Tasks/redux/interfaces';
 import { groupBySwimlaneAndStatus } from '~/utils';
-import { Task } from '/types';
+import { PartialTask, Task } from '/types';
 import { sec } from './security';
 
 const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -35,7 +35,7 @@ export const apiSlice = createApi({
       invalidatesTags: ['Tasks'],
     }),
     updateTasks: builder.mutation({
-      query: (tasks: Partial<Task>[]) => ({
+      query: (tasks: PartialTask[]) => ({
         url: '/tasks',
         method: 'PATCH',
         body: tasks,
