@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import dotenv from 'dotenv';
+import { MongoTask } from '~/types';
+import { Task, TaskWithUserId } from '/types';
 dotenv.config();
 
 const issuer = process.env.AUTH0_ISSUER_BASE_URL;
@@ -74,3 +76,30 @@ export const setAuth0UserMetadata = async (
 
   await axiosRequestWithRetries(configCallback);
 };
+
+export const tasksGroupedByUser = <T extends TaskWithUserId | MongoTask>(
+  tasks: T[]
+) =>
+  tasks.reduce(
+    (acc, task) => ({
+      ...acc,
+      [task.userId]: [...(acc[task.userId] || []), task],
+    }),
+    {} as Record<string, T[]>
+  );
+
+export const mongoTaskToTaskWithUserId = ({
+  _id,
+  ...rest
+}: MongoTask): TaskWithUserId => ({
+  id: _id.toString(),
+  ...rest,
+});
+
+export const compareTasks =
+  <T extends MongoTask | TaskWithUserId>(compareKey: keyof T) =>
+  (a: T, b: T) => {
+    if (a[compareKey] < b[compareKey]) return -1;
+    if (a[compareKey] > b[compareKey]) return 1;
+    return 0;
+  };

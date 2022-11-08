@@ -13,5 +13,9 @@ export type RequestWithAuth = Request & AuthType;
 export type RequestWithUserTasks = Request<unknown, unknown, Task[]> & AuthType;
 
 export type MongoTask = Omit<TaskWithUserId, 'id'> & {
-  _id?: ObjectId;
+  _id: ObjectId;
+};
+
+export type PartialMongoTask = Omit<Partial<TaskWithUserId>, 'id'> & {
+  _id: ObjectId;
 };

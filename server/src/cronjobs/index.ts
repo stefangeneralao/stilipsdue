@@ -15,17 +15,17 @@ enum CronTimeEnum {
 
 const dailyJob = new StockholmCronJob(CronTimeEnum.DAILY, () => {
   console.log('Running daily job');
-  MongoDBAdapter.updateAllTasksStatus('dailies', 'todo');
+  MongoDBAdapter.updateManyStatuses('dailies', 'todo');
 });
 
 const weeklyJob = new StockholmCronJob(CronTimeEnum.WEEKLY, () => {
   console.log('Running weekly job');
-  MongoDBAdapter.updateAllTasksStatus('weeklies', 'todo');
+  MongoDBAdapter.updateManyStatuses('weeklies', 'todo');
 });
 
 const monthlyJob = new StockholmCronJob(CronTimeEnum.MONTHLY, () => {
   console.log('Running monthly job');
-  MongoDBAdapter.updateAllTasksStatus('monthlies', 'todo');
+  MongoDBAdapter.updateManyStatuses('monthlies', 'todo');
 });
 
 const jobs = [dailyJob, weeklyJob, monthlyJob];
