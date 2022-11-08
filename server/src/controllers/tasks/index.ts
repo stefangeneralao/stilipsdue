@@ -7,7 +7,7 @@ import {
   updateUserTasks,
   deleteUserTask,
 } from './service';
-import { PartialTask, Task } from '/types';
+import { PartialTask } from '/types';
 
 const router = Router();
 router.use(checkJwt);

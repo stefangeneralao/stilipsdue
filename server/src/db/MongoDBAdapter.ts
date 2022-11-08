@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import { MongoTask, PartialMongoTask } from '~/types';
 import {
   Optional,
-  PartialTask,
   PartialTaskWithUserId,
   StatusId,
   SwimlaneId,

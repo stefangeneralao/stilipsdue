@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import dotenv from 'dotenv';
 import { MongoTask } from '~/types';
-import { Task, TaskWithUserId } from '/types';
+import { TaskWithUserId } from '/types';
 dotenv.config();
 
 const issuer = process.env.AUTH0_ISSUER_BASE_URL;
