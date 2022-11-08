@@ -27,13 +27,13 @@ jobs:
 
       - name: Run ESLint
         run: npx eslint --config app/.eslintrc.cjs --ext .js,.jsx,.ts,.tsx --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif app
-        continue-on-error: true
 
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
+        if: ${{ always() }}
 
   backend:
     name: Backend
@@ -54,10 +54,10 @@ jobs:
 
       - name: Run ESLint
         run: npx eslint --config server/.eslintrc.cjs --ext .js,.jsx,.ts,.tsx --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif server
-        continue-on-error: true
 
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
+        if: ${{ always() }}
