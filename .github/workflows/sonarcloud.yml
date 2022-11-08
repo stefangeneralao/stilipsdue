@@ -1,4 +1,5 @@
 name: SonarCloud
+
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -11,6 +12,7 @@ on:
 
 jobs:
   analysis:
+    name: Analysis
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
