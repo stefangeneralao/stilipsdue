@@ -1,7 +1,18 @@
 import { Filter, MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
-import { MongoTask } from '~/types';
-import { StatusId, SwimlaneId, TaskWithUserId } from '/types';
+import { MongoTask, PartialMongoTask } from '~/types';
+import {
+  Optional,
+  PartialTaskWithUserId,
+  StatusId,
+  SwimlaneId,
+  TaskWithUserId,
+} from '/types';
+import {
+  compareTasks,
+  mongoTaskToTaskWithUserId,
+  tasksGroupedByUser,
+} from '~/utils';
 dotenv.config();
 
 const {
@@ -37,7 +48,7 @@ class MongoDBAdapter {
   private static readonly client = new MongoClient(uri);
   private static readonly database = this.client.db(mongoDatabaseName);
   private static readonly tasksCollection =
-    this.database.collection<MongoTask>(mongoCollectionName);
+    this.database.collection<Optional<MongoTask, '_id'>>(mongoCollectionName);
 
   static connect = () => this.client.connect();
 
@@ -45,8 +56,8 @@ class MongoDBAdapter {
     await this.tasksCollection.find({ userId: { $eq: userId } }).toArray();
 
   static updateUserTasks = async (
-    tasks: Partial<TaskWithUserId>[]
-  ): Promise<Partial<MongoTask>[]> => {
+    tasks: PartialTaskWithUserId[]
+  ): Promise<PartialMongoTask[]> => {
     const mongoDBBulk = this.tasksCollection.initializeUnorderedBulkOp();
     const updatedTasks = tasks.map((task) => {
       const { id, ...rest } = task;
@@ -62,8 +73,7 @@ class MongoDBAdapter {
 
       return newDocument;
     });
-    const result = await mongoDBBulk.execute();
-    console.log(result);
+    await mongoDBBulk.execute();
     return updatedTasks;
   };
 
@@ -76,7 +86,7 @@ class MongoDBAdapter {
     await this.tasksCollection.deleteMany(filter);
   };
 
-  static updateAllTasksStatus = async (
+  static updateManyStatuses = async (
     swimlane: SwimlaneId,
     toStatus: StatusId
   ) => {
@@ -84,6 +94,7 @@ class MongoDBAdapter {
       { swimlane },
       { $set: { status: toStatus } }
     );
+    await this.adjustTasksIndexes({ swimlane, status: toStatus });
   };
 
   static findUserTasks = async (
@@ -105,28 +116,39 @@ class MongoDBAdapter {
     return deleteResult.value;
   };
 
-  static adjustTasksIndexes = async (
-    userId: string,
-    filter: { swimlane: SwimlaneId; status: StatusId }
-  ) => {
+  static adjustTasksIndexes = async (filter: {
+    userId?: string;
+    swimlane?: SwimlaneId;
+    status?: StatusId;
+  }) => {
     const tasks = await this.findUserTasks({
       ...filter,
-      userId: { $eq: userId },
     });
     if (tasks.length === 0) {
       return;
     }
 
-    const sortedTasks = [...tasks].sort((a, b) => a.index - b.index);
-    const updatedTasks = sortedTasks.map(({ _id, ...task }, index) => ({
-      ...task,
-      index,
-      id: _id.toString(),
-    }));
-    await this.updateUserTasks(updatedTasks);
+    const groupedByUser = Object.values(tasksGroupedByUser(tasks));
+    const sortedTasks = groupedByUser
+      .map((userTasks) =>
+        userTasks.sort(compareTasks('index')).map((task, index) => ({
+          ...mongoTaskToTaskWithUserId(task),
+          index,
+        }))
+      )
+      .flat();
+
+    await this.updateUserTasks(sortedTasks);
   };
 }
 
-MongoDBAdapter.connect();
+console.log('Connecting to MongoDB...');
+MongoDBAdapter.connect()
+  .then(() => {
+    console.log('Connected to MongoDB.');
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 
 export default MongoDBAdapter;

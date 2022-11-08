@@ -21,3 +21,9 @@ export interface Task {
 export interface TaskWithUserId extends Task {
   userId: string;
 }
+
+export type PartialTask = { id: string } & Partial<Task>;
+
+export type PartialTaskWithUserId = { id: string } & Partial<TaskWithUserId>;
+
+export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
