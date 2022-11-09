@@ -7,8 +7,16 @@ on:
   workflow_call:
 
 jobs:
-  frontend:
-    name: Frontend
+  check_errors:
+    strategy:
+      matrix:
+        target_application:
+          - name: Frontend
+            path: app
+          - name: Backend
+            path: server
+
+    name: ${{ matrix.target_application.name }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -16,25 +24,8 @@ jobs:
 
       - name: Install depdendencies
         run: |
-          yarn add tsc
-          yarn add typescript
-          yarn --cwd app
+          yarn add tsc typescript
+          yarn --cwd ${{ matrix.target_application.path }}
 
       - name: Run TSC
-        run: npx tsc --project app/tsconfig.json --noEmit --pretty
-
-  backend:
-    name: Backend
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install depdendencies
-        run: |
-          yarn add tsc
-          yarn add typescript
-          yarn --cwd server
-
-      - name: Run TSC
-        run: npx tsc --project server/tsconfig.json --noEmit --pretty
+        run: npx tsc --project ${{ matrix.target_application.path }}/tsconfig.json --noEmit --pretty

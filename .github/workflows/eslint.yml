@@ -7,53 +7,40 @@ on:
   workflow_call:
 
 jobs:
-  frontend:
-    name: Frontend
+  check_errors:
+    strategy:
+      matrix:
+        target_application:
+          - name: Frontend
+            path: app
+            additional_dependencies: eslint-plugin-react@latest
+          - name: Backend
+            path: server
+
+    name: ${{ matrix.target_application.name }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Install dependencies
         run: |
-          npm install eslint@8.10.0
-          npm install @microsoft/eslint-formatter-sarif@2.1.7
-          npm install eslint-plugin-react@latest
-          npm install @typescript-eslint/eslint-plugin@latest
+          yarn add \
+            typescript \
+            eslint@8.10.0 \
+            @microsoft/eslint-formatter-sarif@2.1.7 \
+            @typescript-eslint/eslint-plugin@latest \
+            @typescript-eslint/parser \
+            ${{ matrix.target_application.additional_dependencies }}
 
       - name: Run ESLint
-        run: npx eslint --config app/.eslintrc.cjs --ext .js,.jsx,.ts,.tsx --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif app
-
-      - name: Upload analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: eslint-results.sarif
-          wait-for-processing: true
-        if: ${{ always() }}
-
-  backend:
-    name: Backend
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install dependencies
         run: |
-          npm install eslint@8.10.0
-          npm install @microsoft/eslint-formatter-sarif@2.1.7
-          npm install @typescript-eslint/eslint-plugin@latest
-
-      - name: Run ESLint
-        run: npx eslint --config server/.eslintrc.cjs --ext .js,.jsx,.ts,.tsx --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif server
+          npx eslint \
+            --config ${{ matrix.target_application.path }}/.eslintrc.cjs \
+            --ext .js,.jsx,.ts,.tsx \
+            --format @microsoft/eslint-formatter-sarif \
+            --output-file eslint-results.sarif \
+            ${{ matrix.target_application.path }}
 
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v2
