@@ -52,11 +52,17 @@ const NewTaskField = ({ swimlaneId, statusId }: Props) => {
 
   const onSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!inputValue || inputValue.length === 0) return;
+    submitNewTask();
+  };
 
-    dispatch(
-      addTask({ label: inputValue, swimlaneId: swimlaneId, statusId: statusId })
-    );
+  const onBlurHandler = () => submitNewTask();
+
+  const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setInputValue(event.currentTarget.value);
+
+  const submitNewTask = () => {
+    if (!inputValue || inputValue.length === 0) return;
+    dispatch(addTask({ label: inputValue, swimlaneId, statusId }));
     addNewTask({
       label: inputValue,
       swimlane: swimlaneId,
@@ -64,15 +70,6 @@ const NewTaskField = ({ swimlaneId, statusId }: Props) => {
       index: tasks.swimlanes[swimlaneId].statuses[statusId].tasks.length,
     });
     setInputValue('');
-  };
-
-  const onBlurHandler = () => {
-    if (!inputValue || inputValue.length === 0) return;
-    setInputValue('');
-  };
-
-  const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.currentTarget.value);
   };
 
   return (
