@@ -23,6 +23,10 @@ const ColumnTitle = styled.h3`
 const TaskList = styled.div<{ isDraggingOver: boolean }>`
   background-color: ${(props) =>
     props.isDraggingOver ? '#a9a28e' : 'transparent'};
+  @media (prefers-color-scheme: dark) {
+    background-color: ${(props) =>
+      props.isDraggingOver ? '#332b1a' : 'transparent'};
+  }
   transition: 300ms;
   padding: 10px;
 `;

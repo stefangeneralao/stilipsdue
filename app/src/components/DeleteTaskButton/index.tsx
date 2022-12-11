@@ -21,6 +21,10 @@ const Button = styled.button`
   &:focus {
     outline: none;
   }
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #3d3d3d;
+  }
 `;
 
 const ButtonText = styled.p`
