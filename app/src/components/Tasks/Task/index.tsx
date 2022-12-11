@@ -13,7 +13,6 @@ import Description from './Description';
 import LabelInput from './Label';
 
 const StyledTask = styled.div<{ isDragging: boolean; lineThrough: boolean }>`
-  background-color: white;
   display: flex;
   align-items: center;
   box-shadow: ${(props) =>
@@ -21,10 +20,17 @@ const StyledTask = styled.div<{ isDragging: boolean; lineThrough: boolean }>`
   cursor: grab;
   text-decoration: ${(props) => (props.lineThrough ? 'line-through' : 'none')};
   transition: background-color 0.15s ease-in-out;
+  background-color: white;
 
   &:hover {
     background-color: #f5f5f5;
-    transition: background-color 0s ease-in-out;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #222;
+    &:hover {
+      background-color: #2b2b2b;
+    }
   }
 `;
 

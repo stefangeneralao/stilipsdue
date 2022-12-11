@@ -8,8 +8,7 @@ const DescriptionTextArea = styled.textarea`
   box-sizing: border-box;
   font-family: inherit;
   font-size: inherit;
-  color: inherit;
-  background-color: transparent;
+  color: #222;
   outline: none;
   background-color: white;
   box-shadow: inset 0 -1px 2px #3d6d8a;
@@ -19,6 +18,11 @@ const DescriptionTextArea = styled.textarea`
   :focus {
     box-shadow: inset 0 -1px 2px #54b6f3;
     transition: 0ms;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: inherit;
+    background-color: transparent;
   }
 `;
 

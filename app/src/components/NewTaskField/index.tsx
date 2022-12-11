@@ -36,6 +36,12 @@ const Input = styled.input`
     transition: 100ms;
     height: 48px;
   }
+
+  @media (prefer-color-scheme: dark) {
+    :focus {
+      background-color: #222;
+    }
+  }
 `;
 
 interface Props {

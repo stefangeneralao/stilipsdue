@@ -15,15 +15,24 @@ const Input = styled.input`
   box-sizing: border-box;
   font-family: inherit;
   font-size: inherit;
-  color: inherit;
-  background-color: transparent;
+
+  color: #222;
+  background-color: white;
   outline: none;
   transition: 200ms ease-in-out;
 
   :focus {
-    background-color: white;
+    background-color: transparent;
     box-shadow: inset 0 -1px 2px #54b6f3;
     transition: 0ms;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: inherit;
+
+    :focus {
+      background-color: transparent;
+    }
   }
 `;
 
