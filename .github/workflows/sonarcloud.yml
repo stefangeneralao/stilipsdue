@@ -10,6 +10,8 @@ on:
         description: "SonarCloud token"
         required: true
 
+  workflow_dispatch:
+
 jobs:
   analysis:
     name: Analysis
