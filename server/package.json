@@ -9,30 +9,29 @@
     "start:build": "node dist"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.12",
+    "@types/cors": "^2.8.13",
     "@types/cron": "^2.0.0",
     "@types/express": "^4.17.13",
-    "@types/express-jwt": "^6.0.4",
     "@types/morgan": "^1.9.3",
-    "@typescript-eslint/eslint-plugin": "^5.40.1",
-    "@typescript-eslint/parser": "^5.40.1",
-    "esbuild": "^0.15.5",
-    "eslint": "^8.26.0",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
+    "esbuild": "^0.16.4",
+    "eslint": "^8.29.0",
     "nodemon": "^2.0.16",
-    "prettier": "^2.6.2",
-    "typescript": "^4.8.4"
+    "prettier": "^2.8.1",
+    "typescript": "^4.9.4"
   },
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.2.1",
     "cors": "^2.8.5",
     "cron": "^2.1.0",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "express-jwt": "^7.7.5",
-    "express-oauth2-jwt-bearer": "^1.1.0",
-    "helmet": "^6.0.0",
-    "jwks-rsa": "^2.1.4",
-    "mongodb": "^4.9.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-jwt": "^7.7.7",
+    "express-oauth2-jwt-bearer": "^1.2.0",
+    "helmet": "^6.0.1",
+    "jwks-rsa": "^3.0.0",
+    "mongodb": "^4.12.1",
     "morgan": "^1.10.0"
   }
 }
